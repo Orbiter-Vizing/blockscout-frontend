@@ -44,7 +44,7 @@ const getConfig = () => {
         '--w3m-border-radius-master': '2px',
         '--w3m-z-index': zIndices.modal,
       },
-      featuredWalletIds: [ '38f5d18bd8522c244bdd70cb4a68e0e718865155811c043f052fb9f1c51de662' ],
+      includeWalletIds: [ '38f5d18bd8522c244bdd70cb4a68e0e718865155811c043f052fb9f1c51de662' ],
     });
 
     return { wagmiConfig };
