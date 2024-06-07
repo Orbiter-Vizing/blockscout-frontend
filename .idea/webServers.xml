@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="6c41f9f2-5c06-4408-87ab-e340e8b62c5d" name="blockscout-frontend">
+        <fileTransfer accessType="SFTP" host="ec2-18-177-24-236.ap-northeast-1.compute.amazonaws.com" port="22" sshConfigId="258ff960-dbb5-416d-8de8-b2efc94fdb97" sshConfig="dev rpc" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

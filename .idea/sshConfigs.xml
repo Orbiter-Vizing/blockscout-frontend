@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="ec2-18-177-24-236.ap-northeast-1.compute.amazonaws.com" id="258ff960-dbb5-416d-8de8-b2efc94fdb97" keyPath="D:\Golang\orbc\orbc_rpc_sepolia.pem" port="22" customName="dev rpc" nameFormat="CUSTOM" username="ec2-user" />
+    </configs>
+  </component>
+</project>
