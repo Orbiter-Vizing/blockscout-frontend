@@ -1,72 +1,43 @@
 import { useColorMode } from '@chakra-ui/react';
-import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc';
-import { createWeb3Modal, defaultWagmiConfig, useWeb3ModalTheme } from '@web3modal/wagmi/react';
+import { createWeb3Modal, useWeb3ModalTheme } from '@web3modal/wagmi/react';
 import React from 'react';
-import { configureChains, WagmiConfig } from 'wagmi';
+import { WagmiProvider } from 'wagmi';
 
 import config from 'configs/app';
-import currentChain from 'lib/web3/currentChain';
+import wagmiConfig from 'lib/web3/wagmiConfig';
 import colors from 'theme/foundations/colors';
 import { BODY_TYPEFACE } from 'theme/foundations/typography';
 import zIndices from 'theme/foundations/zIndices';
 
 const feature = config.features.blockchainInteraction;
 
-const getConfig = () => {
+const init = () => {
   try {
-    if (!feature.isEnabled) {
-      throw new Error();
+    if (!wagmiConfig || !feature.isEnabled) {
+      return;
     }
 
-    const { chains } = configureChains(
-      [ currentChain ],
-      [
-        jsonRpcProvider({
-          rpc: () => ({
-            http: config.chain.rpcUrl || '',
-          }),
-        }),
-      ],
-    );
-
-    const wagmiConfig = defaultWagmiConfig({
-      chains,
-      projectId: feature.walletConnect.projectId,
-    });
-
-    const modal = createWeb3Modal({
+    createWeb3Modal({
       wagmiConfig,
       projectId: feature.walletConnect.projectId,
-      chains,
       themeVariables: {
         '--w3m-font-family': `${ BODY_TYPEFACE }, sans-serif`,
         '--w3m-accent': colors.blue[600],
         '--w3m-border-radius-master': '2px',
         '--w3m-z-index': zIndices.modal,
       },
-      featuredWalletIds: [
-        '38f5d18bd8522c244bdd70cb4a68e0e718865155811c043f052fb9f1c51de662',
-        '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0',
+      allWallets: 'HIDE',
+      includeWalletIds: [
         'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
+        '38f5d18bd8522c244bdd70cb4a68e0e718865155811c043f052fb9f1c51de662',
       ],
+      allowUnsupportedChain: true,
     });
-
-    const { open, selectedNetworkId } = modal.getState();
-    // eslint-disable-next-line no-console
-    console.log(open);
-    // eslint-disable-next-line no-console
-    console.log(selectedNetworkId);
-
-    // eslint-disable-next-line no-console
-    modal.subscribeEvents(event => console.log(event));
-
-    return { wagmiConfig };
   } catch (error) {
-    return {};
   }
 };
 
-const { wagmiConfig } = getConfig();
+init();
 
 interface Props {
   children: React.ReactNode;
@@ -91,9 +62,9 @@ const Provider = ({ children, fallback }: Props) => {
   }
 
   return (
-    <WagmiConfig config={ wagmiConfig }>
+    <WagmiProvider config={ wagmiConfig }>
       { children }
-    </WagmiConfig>
+    </WagmiProvider>
   );
 };
 

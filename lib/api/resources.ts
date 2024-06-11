@@ -29,10 +29,12 @@ import type {
   AddressNFTsResponse,
   AddressCollectionsResponse,
   AddressNFTTokensFilter,
+  AddressCoinBalanceHistoryChartOld,
 } from 'types/api/address';
 import type { AddressesResponse } from 'types/api/addresses';
+import type { TxBlobs, Blob } from 'types/api/blobs';
 import type { BlocksResponse, BlockTransactionsResponse, Block, BlockFilters, BlockWithdrawalsResponse } from 'types/api/block';
-import type { ChartMarketResponse, ChartTransactionResponse } from 'types/api/charts';
+import type { ChartMarketResponse, ChartSecondaryCoinPriceResponse, ChartTransactionResponse } from 'types/api/charts';
 import type { BackendVersionConfig } from 'types/api/configs';
 import type {
   SmartContract,
@@ -55,6 +57,7 @@ import type {
 import type { IndexingStatus } from 'types/api/indexingStatus';
 import type { InternalTransactionsResponse } from 'types/api/internalTransaction';
 import type { LogsResponseTx, LogsResponseAddress } from 'types/api/log';
+import type { NovesAccountHistoryResponse, NovesDescribeTxsResponse, NovesResponseData } from 'types/api/noves';
 import type {
   OptimisticL2DepositsResponse,
   OptimisticL2DepositsItem,
@@ -84,9 +87,11 @@ import type {
   Transaction,
   TransactionsResponseWatchlist,
   TransactionsSorting,
+  TransactionsResponseWithBlobs,
+  TransactionsStats,
 } from 'types/api/transaction';
 import type { TxInterpretationResponse } from 'types/api/txInterpretation';
-import type { TTxsFilters } from 'types/api/txsFilters';
+import type { TTxsFilters, TTxsWithBlobsFilters } from 'types/api/txsFilters';
 import type { TxStateChanges } from 'types/api/txStateChanges';
 import type { UserOpsResponse, UserOp, UserOpsFilters, UserOpsAccount } from 'types/api/userOps';
 import type { ValidatorsCountersResponse, ValidatorsFilters, ValidatorsResponse, ValidatorsSorting } from 'types/api/validators';
@@ -94,6 +99,7 @@ import type { VerifiedContractsSorting } from 'types/api/verifiedContracts';
 import type { VisualizedContract } from 'types/api/visualization';
 import type { WithdrawalsResponse, WithdrawalsCounters } from 'types/api/withdrawals';
 import type { ZkEvmL2TxnBatch, ZkEvmL2TxnBatchesItem, ZkEvmL2TxnBatchesResponse, ZkEvmL2TxnBatchTxs } from 'types/api/zkEvmL2';
+import type { ZkSyncBatch, ZkSyncBatchesResponse, ZkSyncBatchTxs } from 'types/api/zkSyncL2';
 import type { MarketplaceAppOverview } from 'types/client/marketplace';
 import type { ArrayElement } from 'types/utils';
 
@@ -264,12 +270,15 @@ export const RESOURCES = {
   block_txs: {
     path: '/api/v2/blocks/:height_or_hash/transactions',
     pathParams: [ 'height_or_hash' as const ],
-    filterFields: [],
+    filterFields: [ 'type' as const ],
   },
   block_withdrawals: {
     path: '/api/v2/blocks/:height_or_hash/withdrawals',
     pathParams: [ 'height_or_hash' as const ],
     filterFields: [],
+  },
+  txs_stats: {
+    path: '/api/v2/transactions/stats',
   },
   txs_validated: {
     path: '/api/v2/transactions',
@@ -278,6 +287,10 @@ export const RESOURCES = {
   txs_pending: {
     path: '/api/v2/transactions',
     filterFields: [ 'filter' as const, 'type' as const, 'method' as const ],
+  },
+  txs_with_blobs: {
+    path: '/api/v2/transactions',
+    filterFields: [ 'type' as const ],
   },
   txs_watchlist: {
     path: '/api/v2/transactions/watchlist',
@@ -315,6 +328,10 @@ export const RESOURCES = {
     path: '/api/v2/transactions/:hash/state-changes',
     pathParams: [ 'hash' as const ],
     filterFields: [],
+  },
+  tx_blobs: {
+    path: '/api/v2/transactions/:hash/blobs',
+    pathParams: [ 'hash' as const ],
   },
   tx_interpretation: {
     path: '/api/v2/transactions/:hash/summary',
@@ -527,6 +544,9 @@ export const RESOURCES = {
   stats_charts_market: {
     path: '/api/v2/stats/charts/market',
   },
+  stats_charts_secondary_coin_price: {
+    path: '/api/v2/stats/charts/secondary-coin-market',
+  },
 
   // HOMEPAGE
   homepage_blocks: {
@@ -550,6 +570,9 @@ export const RESOURCES = {
   homepage_zkevm_latest_batch: {
     path: '/api/v2/main-page/zkevm/batches/latest-number',
   },
+  homepage_zksync_latest_batch: {
+    path: '/api/v2/main-page/zksync/batches/latest-number',
+  },
 
   // SEARCH
   quick_search: {
@@ -564,7 +587,7 @@ export const RESOURCES = {
     path: '/api/v2/search/check-redirect',
   },
 
-  // L2
+  // optimistic L2
   l2_deposits: {
     path: '/api/v2/optimism/deposits',
     filterFields: [],
@@ -601,6 +624,7 @@ export const RESOURCES = {
     path: '/api/v2/optimism/txn-batches/count',
   },
 
+  // zkEvm L2
   zkevm_l2_txn_batches: {
     path: '/api/v2/zkevm/batches',
     filterFields: [],
@@ -614,8 +638,30 @@ export const RESOURCES = {
     path: '/api/v2/zkevm/batches/:number',
     pathParams: [ 'number' as const ],
   },
+
   zkevm_l2_txn_batch_txs: {
     path: '/api/v2/transactions/zkevm-batch/:number',
+    pathParams: [ 'number' as const ],
+    filterFields: [],
+  },
+
+  // zkSync L2
+  zksync_l2_txn_batches: {
+    path: '/api/v2/zksync/batches',
+    filterFields: [],
+  },
+
+  zksync_l2_txn_batches_count: {
+    path: '/api/v2/zksync/batches/count',
+  },
+
+  zksync_l2_txn_batch: {
+    path: '/api/v2/zksync/batches/:number',
+    pathParams: [ 'number' as const ],
+  },
+
+  zksync_l2_txn_batch_txs: {
+    path: '/api/v2/transactions/zksync-batch/:number',
     pathParams: [ 'number' as const ],
     filterFields: [],
   },
@@ -639,6 +685,20 @@ export const RESOURCES = {
     path: '/api/v2/shibarium/withdrawals/count',
   },
 
+  // NOVES-FI
+  noves_transaction: {
+    path: '/api/v2/proxy/noves-fi/transactions/:hash',
+    pathParams: [ 'hash' as const ],
+  },
+  noves_address_history: {
+    path: '/api/v2/proxy/noves-fi/addresses/:address/transactions',
+    pathParams: [ 'address' as const ],
+    filterFields: [],
+  },
+  noves_describe_txs: {
+    path: '/api/v2/proxy/noves-fi/transaction-descriptions',
+  },
+
   // USER OPS
   user_ops: {
     path: '/api/v2/proxy/account-abstraction/operations',
@@ -652,16 +712,26 @@ export const RESOURCES = {
     path: '/api/v2/proxy/account-abstraction/accounts/:hash',
     pathParams: [ 'hash' as const ],
   },
+  user_op_interpretation: {
+    path: '/api/v2/proxy/account-abstraction/operations/:hash/summary',
+    pathParams: [ 'hash' as const ],
+  },
 
   // VALIDATORS
   validators: {
     path: '/api/v2/validators/:chainType',
     pathParams: [ 'chainType' as const ],
-    filterFields: [ 'address_hash' as const, 'state' as const ],
+    filterFields: [ 'address_hash' as const, 'state_filter' as const ],
   },
   validators_counters: {
     path: '/api/v2/validators/:chainType/counters',
     pathParams: [ 'chainType' as const ],
+  },
+
+  // BLOBS
+  blob: {
+    path: '/api/v2/blobs/:hash',
+    pathParams: [ 'hash' as const ],
   },
 
   // CONFIGS
@@ -723,8 +793,8 @@ export interface ResourceError<T = unknown> {
 export type ResourceErrorAccount<T> = ResourceError<{ errors: T }>
 
 export type PaginatedResources = 'blocks' | 'block_txs' |
-'txs_validated' | 'txs_pending' | 'txs_watchlist' | 'txs_execution_node' |
-'tx_internal_txs' | 'tx_logs' | 'tx_token_transfers' | 'tx_state_changes' |
+'txs_validated' | 'txs_pending' | 'txs_with_blobs' | 'txs_watchlist' | 'txs_execution_node' |
+'tx_internal_txs' | 'tx_logs' | 'tx_token_transfers' | 'tx_state_changes' | 'tx_blobs' |
 'addresses' |
 'address_txs' | 'address_internal_txs' | 'address_token_transfers' | 'address_blocks_validated' | 'address_coin_balance' |
 'search' |
@@ -735,9 +805,10 @@ export type PaginatedResources = 'blocks' | 'block_txs' |
 'l2_output_roots' | 'l2_withdrawals' | 'l2_txn_batches' | 'l2_deposits' |
 'shibarium_deposits' | 'shibarium_withdrawals' |
 'zkevm_l2_txn_batches' | 'zkevm_l2_txn_batch_txs' |
+'zksync_l2_txn_batches' | 'zksync_l2_txn_batch_txs' |
 'withdrawals' | 'address_withdrawals' | 'block_withdrawals' |
 'watchlist' | 'private_tags_address' | 'private_tags_tx' |
-'domains_lookup' | 'addresses_lookup' | 'user_ops' | 'validators';
+'domains_lookup' | 'addresses_lookup' | 'user_ops' | 'validators' | 'noves_address_history';
 
 export type PaginatedResponse<Q extends PaginatedResources> = ResourcePayload<Q>;
 
@@ -759,6 +830,7 @@ Q extends 'token_info_applications' ? TokenInfoApplications :
 Q extends 'stats' ? HomeStats :
 Q extends 'stats_charts_txs' ? ChartTransactionResponse :
 Q extends 'stats_charts_market' ? ChartMarketResponse :
+Q extends 'stats_charts_secondary_coin_price' ? ChartSecondaryCoinPriceResponse :
 Q extends 'homepage_blocks' ? Array<Block> :
 Q extends 'homepage_txs' ? Array<Transaction> :
 Q extends 'homepage_txs_watchlist' ? Array<Transaction> :
@@ -766,6 +838,7 @@ Q extends 'homepage_deposits' ? Array<OptimisticL2DepositsItem> :
 Q extends 'homepage_zkevm_l2_batches' ? { items: Array<ZkEvmL2TxnBatchesItem> } :
 Q extends 'homepage_indexing_status' ? IndexingStatus :
 Q extends 'homepage_zkevm_latest_batch' ? number :
+Q extends 'homepage_zksync_latest_batch' ? number :
 Q extends 'stats_counters' ? Counters :
 Q extends 'stats_lines' ? StatsCharts :
 Q extends 'stats_line' ? StatsChart :
@@ -773,8 +846,10 @@ Q extends 'blocks' ? BlocksResponse :
 Q extends 'block' ? Block :
 Q extends 'block_txs' ? BlockTransactionsResponse :
 Q extends 'block_withdrawals' ? BlockWithdrawalsResponse :
+Q extends 'txs_stats' ? TransactionsStats :
 Q extends 'txs_validated' ? TransactionsResponseValidated :
 Q extends 'txs_pending' ? TransactionsResponsePending :
+Q extends 'txs_with_blobs' ? TransactionsResponseWithBlobs :
 Q extends 'txs_watchlist' ? TransactionsResponseWatchlist :
 Q extends 'txs_execution_node' ? TransactionsResponseValidated :
 Q extends 'tx' ? Transaction :
@@ -783,6 +858,7 @@ Q extends 'tx_logs' ? LogsResponseTx :
 Q extends 'tx_token_transfers' ? TokenTransferResponse :
 Q extends 'tx_raw_trace' ? RawTracesResponse :
 Q extends 'tx_state_changes' ? TxStateChanges :
+Q extends 'tx_blobs' ? TxBlobs :
 Q extends 'tx_interpretation' ? TxInterpretationResponse :
 Q extends 'addresses' ? AddressesResponse :
 Q extends 'address' ? Address :
@@ -793,7 +869,7 @@ Q extends 'address_internal_txs' ? AddressInternalTxsResponse :
 Q extends 'address_token_transfers' ? AddressTokenTransferResponse :
 Q extends 'address_blocks_validated' ? AddressBlocksValidatedResponse :
 Q extends 'address_coin_balance' ? AddressCoinBalanceHistoryResponse :
-Q extends 'address_coin_balance_chart' ? AddressCoinBalanceHistoryChart :
+Q extends 'address_coin_balance_chart' ? AddressCoinBalanceHistoryChartOld | AddressCoinBalanceHistoryChart :
 Q extends 'address_logs' ? LogsResponseAddress :
 Q extends 'address_tokens' ? AddressTokensResponse :
 Q extends 'address_nfts' ? AddressNFTsResponse :
@@ -839,13 +915,6 @@ Q extends 'zkevm_l2_txn_batches_count' ? number :
 Q extends 'zkevm_l2_txn_batch' ? ZkEvmL2TxnBatch :
 Q extends 'zkevm_l2_txn_batch_txs' ? ZkEvmL2TxnBatchTxs :
 Q extends 'config_backend_version' ? BackendVersionConfig :
-Q extends 'addresses_lookup' ? EnsAddressLookupResponse :
-Q extends 'domain_info' ? EnsDomainDetailed :
-Q extends 'domain_events' ? EnsDomainEventsResponse :
-Q extends 'domains_lookup' ? EnsDomainLookupResponse :
-Q extends 'user_ops' ? UserOpsResponse :
-Q extends 'user_op' ? UserOp :
-Q extends 'user_ops_account' ? UserOpsAccount :
 never;
 // !!! IMPORTANT !!!
 // See comment above
@@ -853,6 +922,7 @@ never;
 
 /* eslint-disable @typescript-eslint/indent */
 export type ResourcePayloadB<Q extends ResourceName> =
+Q extends 'blob' ? Blob :
 Q extends 'marketplace_dapps' ? Array<MarketplaceAppOverview> :
 Q extends 'marketplace_dapp' ? MarketplaceAppOverview :
 Q extends 'validators' ? ValidatorsResponse :
@@ -861,7 +931,22 @@ Q extends 'shibarium_withdrawals' ? ShibariumWithdrawalsResponse :
 Q extends 'shibarium_deposits' ? ShibariumDepositsResponse :
 Q extends 'shibarium_withdrawals_count' ? number :
 Q extends 'shibarium_deposits_count' ? number :
+Q extends 'zksync_l2_txn_batches' ? ZkSyncBatchesResponse :
+Q extends 'zksync_l2_txn_batches_count' ? number :
+Q extends 'zksync_l2_txn_batch' ? ZkSyncBatch :
+Q extends 'zksync_l2_txn_batch_txs' ? ZkSyncBatchTxs :
 Q extends 'contract_security_audits' ? SmartContractSecurityAudits :
+Q extends 'addresses_lookup' ? EnsAddressLookupResponse :
+Q extends 'domain_info' ? EnsDomainDetailed :
+Q extends 'domain_events' ? EnsDomainEventsResponse :
+Q extends 'domains_lookup' ? EnsDomainLookupResponse :
+Q extends 'user_ops' ? UserOpsResponse :
+Q extends 'user_op' ? UserOp :
+Q extends 'user_ops_account' ? UserOpsAccount :
+Q extends 'user_op_interpretation'? TxInterpretationResponse :
+Q extends 'noves_transaction' ? NovesResponseData :
+Q extends 'noves_address_history' ? NovesAccountHistoryResponse :
+Q extends 'noves_describe_txs' ? NovesDescribeTxsResponse :
 never;
 /* eslint-enable @typescript-eslint/indent */
 
@@ -874,7 +959,9 @@ export type PaginatedResponseNextPageParams<Q extends ResourceName> = Q extends 
 /* eslint-disable @typescript-eslint/indent */
 export type PaginationFilters<Q extends PaginatedResources> =
 Q extends 'blocks' ? BlockFilters :
+Q extends 'block_txs' ? TTxsWithBlobsFilters :
 Q extends 'txs_validated' | 'txs_pending' ? TTxsFilters :
+Q extends 'txs_with_blobs' ? TTxsWithBlobsFilters :
 Q extends 'tx_token_transfers' ? TokenTransferFilters :
 Q extends 'token_transfers' ? TokenTransferFilters :
 Q extends 'address_txs' | 'address_internal_txs' ? AddressTxsFilters :

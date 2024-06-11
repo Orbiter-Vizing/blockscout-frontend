@@ -1,19 +1,19 @@
 import { ChakraProvider } from '@chakra-ui/react';
 import { GrowthBookProvider } from '@growthbook/growthbook-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react';
 import React from 'react';
-import { WagmiConfig } from 'wagmi';
-import { mainnet } from 'wagmi/chains';
+import { WagmiProvider } from 'wagmi';
 
 import type { Props as PageProps } from 'nextjs/getServerSideProps';
 
+import config from 'configs/app';
 import { AppContextProvider } from 'lib/contexts/app';
 import { SocketProvider } from 'lib/socket/context';
+import wagmiConfig from 'lib/web3/wagmiConfig';
 import * as app from 'playwright/utils/app';
 import theme from 'theme';
 
-type Props = {
+export type Props = {
   children: React.ReactNode;
   withSocket?: boolean;
   appContext?: {
@@ -25,30 +25,11 @@ const defaultAppContext = {
   pageProps: {
     cookies: '',
     referrer: '',
-    id: '',
-    height_or_hash: '',
-    hash: '',
-    number: '',
-    q: '',
-    name: '',
+    query: {},
+    adBannerProvider: 'slise' as const,
+    apiData: null,
   },
 };
-
-// >>> Web3 stuff
-const chains = [ mainnet ];
-const WALLET_CONNECT_PROJECT_ID = 'PROJECT_ID';
-
-const wagmiConfig = defaultWagmiConfig({
-  chains,
-  projectId: WALLET_CONNECT_PROJECT_ID,
-});
-
-createWeb3Modal({
-  wagmiConfig,
-  projectId: WALLET_CONNECT_PROJECT_ID,
-  chains,
-});
-// <<<<
 
 const TestApp = ({ children, withSocket, appContext = defaultAppContext }: Props) => {
   const [ queryClient ] = React.useState(() => new QueryClient({
@@ -63,12 +44,12 @@ const TestApp = ({ children, withSocket, appContext = defaultAppContext }: Props
   return (
     <ChakraProvider theme={ theme }>
       <QueryClientProvider client={ queryClient }>
-        <SocketProvider url={ withSocket ? `ws://${ app.domain }:${ app.socketPort }` : undefined }>
+        <SocketProvider url={ withSocket ? `ws://${ config.app.host }:${ app.socketPort }` : undefined }>
           <AppContextProvider { ...appContext }>
             <GrowthBookProvider>
-              <WagmiConfig config={ wagmiConfig }>
+              <WagmiProvider config={ wagmiConfig! }>
                 { children }
-              </WagmiConfig>
+              </WagmiProvider>
             </GrowthBookProvider>
           </AppContextProvider>
         </SocketProvider>
