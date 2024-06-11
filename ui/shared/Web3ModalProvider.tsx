@@ -34,7 +34,7 @@ const getConfig = () => {
       projectId: feature.walletConnect.projectId,
     });
 
-    createWeb3Modal({
+    const modal = createWeb3Modal({
       wagmiConfig,
       projectId: feature.walletConnect.projectId,
       chains,
@@ -50,6 +50,15 @@ const getConfig = () => {
         'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
       ],
     });
+
+    const { open, selectedNetworkId } = modal.getState();
+    // eslint-disable-next-line no-console
+    console.log(open);
+    // eslint-disable-next-line no-console
+    console.log(selectedNetworkId);
+
+    // eslint-disable-next-line no-console
+    modal.subscribeEvents(event => console.log(event));
 
     return { wagmiConfig };
   } catch (error) {
