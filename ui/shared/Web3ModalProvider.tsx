@@ -33,8 +33,7 @@ const init = () => {
       ],
       allowUnsupportedChain: true,
     });
-  } catch (error) {
-  }
+  } catch (error) {}
 };
 
 init();

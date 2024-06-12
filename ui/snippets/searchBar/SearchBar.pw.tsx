@@ -2,11 +2,13 @@ import React from 'react';
 
 import { apps as appsMock } from 'mocks/apps/apps';
 import * as searchMock from 'mocks/search/index';
+import { ENVS_MAP } from 'playwright/fixtures/mockEnvs';
 import { test, expect } from 'playwright/lib';
 
 import SearchBar from './SearchBar';
 
-test.beforeEach(async({ mockAssetResponse, mockEnvs }) => {
+test.beforeEach(async({ mockAssetResponse, mockEnvs, mockTextAd }) => {
+  await mockTextAd();
   await mockAssetResponse(searchMock.token1.icon_url as string, './playwright/mocks/image_s.jpg');
   await mockEnvs([
     [ 'NEXT_PUBLIC_MARKETPLACE_ENABLED', 'false' ],
@@ -28,6 +30,7 @@ test('search by token name  +@mobile +@dark-mode', async({ render, page, mockApi
 test('search by contract name  +@mobile +@dark-mode', async({ render, page, mockApiResponse }) => {
   const apiUrl = await mockApiResponse('quick_search', [
     searchMock.contract1,
+    searchMock.contract2,
     searchMock.address2,
   ], { queryParams: { q: 'o' } });
 
@@ -108,7 +111,8 @@ test('search by tx hash +@mobile', async({ render, page, mockApiResponse }) => {
   await expect(page).toHaveScreenshot({ clip: { x: 0, y: 0, width: 1200, height: 300 } });
 });
 
-test('search by blob hash +@mobile', async({ render, page, mockApiResponse }) => {
+test('search by blob hash +@mobile', async({ render, page, mockApiResponse, mockEnvs }) => {
+  await mockEnvs(ENVS_MAP.dataAvailability);
   const apiUrl = await mockApiResponse('quick_search', [
     searchMock.blob1,
   ], { queryParams: { q: searchMock.blob1.blob_hash } });
@@ -119,7 +123,8 @@ test('search by blob hash +@mobile', async({ render, page, mockApiResponse }) =>
   await expect(page).toHaveScreenshot({ clip: { x: 0, y: 0, width: 1200, height: 300 } });
 });
 
-test('search by domain name +@mobile', async({ render, page, mockApiResponse }) => {
+test('search by domain name +@mobile', async({ render, page, mockApiResponse, mockEnvs }) => {
+  await mockEnvs(ENVS_MAP.nameService);
   const apiUrl = await mockApiResponse('quick_search', [
     searchMock.domain1,
   ], { queryParams: { q: searchMock.domain1.ens_info.name } });
@@ -132,9 +137,7 @@ test('search by domain name +@mobile', async({ render, page, mockApiResponse }) 
 });
 
 test('search by user op hash +@mobile', async({ render, page, mockApiResponse, mockEnvs }) => {
-  await mockEnvs([
-    [ 'NEXT_PUBLIC_HAS_USER_OPS', 'true' ],
-  ]);
+  await mockEnvs(ENVS_MAP.userOps);
   const apiUrl = await mockApiResponse('quick_search', [
     searchMock.userOp1,
   ], { queryParams: { q: searchMock.tx1.tx_hash } });
