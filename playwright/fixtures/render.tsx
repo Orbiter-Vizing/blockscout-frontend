@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-imports */
 import type { MountOptions } from '@playwright/experimental-ct-react';
 import type { Locator, TestFixture } from '@playwright/test';
 import type router from 'next/router';

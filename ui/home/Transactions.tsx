@@ -9,10 +9,6 @@ import LatestWatchlistTxs from 'ui/home/LatestWatchlistTxs';
 import TabsWithScroll from 'ui/shared/Tabs/TabsWithScroll';
 const rollupFeature = config.features.rollup;
 
-const TAB_LIST_PROPS = {
-  mb: { base: 3, lg: 3 },
-};
-
 const TransactionsHome = () => {
   const hasAccount = useHasAccount();
   if ((rollupFeature.isEnabled && rollupFeature.type === 'optimistic') || hasAccount) {
@@ -23,15 +19,15 @@ const TransactionsHome = () => {
     ].filter(Boolean);
     return (
       <>
-        <Heading as="h4" size="sm" mb={ 3 }>Transactions</Heading>
-        <TabsWithScroll tabs={ tabs } lazyBehavior="keepMounted" tabListProps={ TAB_LIST_PROPS }/>
+        <Heading as="h4" size="sm" mb={ 4 }>Transactions</Heading>
+        <TabsWithScroll tabs={ tabs } lazyBehavior="keepMounted"/>
       </>
     );
   }
 
   return (
     <>
-      <Heading as="h4" size="sm" mb={ 3 }>Latest transactions</Heading>
+      <Heading as="h4" size="sm" mb={ 4 }>Latest transactions</Heading>
       <LatestTxs/>
     </>
   );

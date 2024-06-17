@@ -17,9 +17,9 @@ const TEST_CASES = [
   {
     title: 'static route',
     route: {
-      pathname: '/txs',
+      pathname: '/blocks',
     },
-  } as TestCase<'/txs'>,
+  } as TestCase<'/blocks'>,
   {
     title: 'dynamic route',
     route: {

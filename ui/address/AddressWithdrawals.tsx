@@ -6,7 +6,7 @@ import useIsMounted from 'lib/hooks/useIsMounted';
 import getQueryParamString from 'lib/router/getQueryParamString';
 import { generateListStub } from 'stubs/utils';
 import { WITHDRAWAL } from 'stubs/withdrawals';
-import ActionBar, { ACTION_BAR_HEIGHT_DESKTOP } from 'ui/shared/ActionBar';
+import ActionBar from 'ui/shared/ActionBar';
 import DataListDisplay from 'ui/shared/DataListDisplay';
 import Pagination from 'ui/shared/pagination/Pagination';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
@@ -52,12 +52,7 @@ const AddressWithdrawals = ({ scrollRef, shouldRender = true }: Props) => {
         )) }
       </Show>
       <Hide below="lg" ssr={ false }>
-        <BeaconChainWithdrawalsTable
-          items={ data.items }
-          view="address"
-          top={ pagination.isVisible ? ACTION_BAR_HEIGHT_DESKTOP : 0 }
-          isLoading={ isPlaceholderData }
-        />
+        <BeaconChainWithdrawalsTable items={ data.items } view="address" top={ pagination.isVisible ? 80 : 0 } isLoading={ isPlaceholderData }/>
       </Hide>
     </>
   ) : null ;

@@ -97,7 +97,7 @@ const ProfileMenuDesktop = ({ isHomePage, className, fallbackIconSize }: Props) 
         </Box>
       </Tooltip>
       { hasMenu && (
-        <PopoverContent maxW="400px" minW="220px" w="min-content">
+        <PopoverContent w="212px">
           <PopoverBody padding="24px 16px 16px 16px">
             <ProfileMenuContent data={ data }/>
           </PopoverBody>

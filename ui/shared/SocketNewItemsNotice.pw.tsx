@@ -1,6 +1,7 @@
+import { test, expect } from '@playwright/experimental-ct-react';
 import React from 'react';
 
-import { test, expect } from 'playwright/lib';
+import TestApp from 'playwright/TestApp';
 
 import SocketNewItemsNotice from './SocketNewItemsNotice';
 
@@ -11,17 +12,35 @@ const hooksConfig = {
   },
 };
 
-test('2 new items in validated txs list +@dark-mode', async({ render }) => {
-  const component = await render(<SocketNewItemsNotice url="/" num={ 2 }/>, { hooksConfig });
+test('2 new items in validated txs list +@dark-mode', async({ mount }) => {
+  const component = await mount(
+    <TestApp>
+      <SocketNewItemsNotice url="/" num={ 2 }/>
+    </TestApp>,
+    { hooksConfig },
+  );
+
   await expect(component).toHaveScreenshot();
 });
 
-test('connection loss', async({ render }) => {
-  const component = await render(<SocketNewItemsNotice url="/" alert="Connection is lost. Please reload the page."/>, { hooksConfig });
+test('connection loss', async({ mount }) => {
+  const component = await mount(
+    <TestApp>
+      <SocketNewItemsNotice url="/" alert="Connection is lost. Please reload the page."/>
+    </TestApp>,
+    { hooksConfig },
+  );
+
   await expect(component).toHaveScreenshot();
 });
 
-test('fetching', async({ render }) => {
-  const component = await render(<SocketNewItemsNotice url="/"/>, { hooksConfig });
+test('fetching', async({ mount }) => {
+  const component = await mount(
+    <TestApp>
+      <SocketNewItemsNotice url="/"/>
+    </TestApp>,
+    { hooksConfig },
+  );
+
   await expect(component).toHaveScreenshot();
 });

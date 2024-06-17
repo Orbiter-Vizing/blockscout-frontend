@@ -46,7 +46,7 @@ const TxsStats = () => {
         value={ Number(txsStatsQuery.data?.transactions_count_24h).toLocaleString() }
         period="24h"
         isLoading={ txsStatsQuery.isPlaceholderData }
-        href={ config.features.stats.isEnabled ? { pathname: '/stats', query: { chartId: 'newTxns' } } : undefined }
+        href={{ pathname: '/stats', query: { chartId: 'newTxns' } }}
       />
       <StatsWidget
         label="Pending transactions"
@@ -63,7 +63,7 @@ const TxsStats = () => {
         valuePostfix={ thinsp + config.chain.currency.symbol }
         period="24h"
         isLoading={ txsStatsQuery.isPlaceholderData }
-        href={ config.features.stats.isEnabled ? { pathname: '/stats', query: { chartId: 'txnsFee' } } : undefined }
+        href={{ pathname: '/stats', query: { chartId: 'txnsFee' } }}
       />
       <StatsWidget
         label="Avg. transaction fee"
@@ -72,7 +72,7 @@ const TxsStats = () => {
         valuePostfix={ txFeeAvg.usd ? undefined : thinsp + config.chain.currency.symbol }
         period="24h"
         isLoading={ txsStatsQuery.isPlaceholderData }
-        href={ config.features.stats.isEnabled ? { pathname: '/stats', query: { chartId: 'averageTxnFee' } } : undefined }
+        href={{ pathname: '/stats', query: { chartId: 'averageTxnFee' } }}
       />
     </Box>
   );

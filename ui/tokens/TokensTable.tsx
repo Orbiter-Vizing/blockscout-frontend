@@ -4,7 +4,6 @@ import React from 'react';
 import type { TokenInfo } from 'types/api/token';
 import type { TokensSortingField, TokensSortingValue } from 'types/api/tokens';
 
-import { ACTION_BAR_HEIGHT_DESKTOP } from 'ui/shared/ActionBar';
 import IconSvg from 'ui/shared/IconSvg';
 import { default as getNextSortValueShared } from 'ui/shared/sort/getNextSortValue';
 import { default as Thead } from 'ui/shared/TheadSticky';
@@ -25,10 +24,9 @@ type Props = {
   sorting?: TokensSortingValue;
   setSorting: (val?: TokensSortingValue) => void;
   isLoading?: boolean;
-  top?: number;
 }
 
-const TokensTable = ({ items, page, isLoading, sorting, setSorting, top }: Props) => {
+const TokensTable = ({ items, page, isLoading, sorting, setSorting }: Props) => {
   const sortIconTransform = sorting?.includes('asc') ? 'rotate(-90deg)' : 'rotate(90deg)';
 
   const sort = React.useCallback((field: TokensSortingField) => () => {
@@ -38,7 +36,7 @@ const TokensTable = ({ items, page, isLoading, sorting, setSorting, top }: Props
 
   return (
     <Table>
-      <Thead top={ top ?? ACTION_BAR_HEIGHT_DESKTOP }>
+      <Thead top={ 80 }>
         <Tr>
           <Th w="50%">Token</Th>
           <Th isNumeric w="15%">

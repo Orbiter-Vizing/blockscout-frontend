@@ -29,8 +29,7 @@ const TokenInfoFieldProjectSector = ({ control, isReadOnly, config }: Props) => 
         options={ options }
         size={ isMobile ? 'md' : 'lg' }
         placeholder="Project industry"
-        isDisabled={ formState.isSubmitting }
-        isReadOnly={ isReadOnly }
+        isDisabled={ formState.isSubmitting || isReadOnly }
         error={ fieldState.error }
       />
     );

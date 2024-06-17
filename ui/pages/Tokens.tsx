@@ -26,12 +26,10 @@ import { SORT_OPTIONS, getTokenFilterValue, getBridgedChainsFilterValue } from '
 
 const TAB_LIST_PROPS = {
   marginBottom: 0,
-  pt: 6,
-  pb: 6,
+  py: 5,
   marginTop: -5,
   alignItems: 'center',
 };
-const TABS_HEIGHT = 88;
 
 const TABS_RIGHT_SLOT_PROPS = {
   ml: 8,
@@ -103,8 +101,6 @@ const Tokens = () => {
     setBridgeChains(undefined);
   }, []);
 
-  const hasMultipleTabs = bridgedTokensFeature.isEnabled;
-
   const filter = tab === 'bridged' ? (
     <PopoverFilter isActive={ bridgeChains && bridgeChains.length > 0 } contentProps={{ maxW: '350px' }} appliedFiltersNum={ bridgeChains?.length }>
       <TokensBridgedChainsFilter onChange={ handleBridgeChainsChange } defaultValue={ bridgeChains }/>
@@ -124,7 +120,7 @@ const Tokens = () => {
       onSearchChange={ handleSearchTermChange }
       sort={ sort }
       onSortChange={ handleSortChange }
-      inTabsSlot={ !isMobile && hasMultipleTabs }
+      inTabsSlot={ !isMobile && bridgedTokensFeature.isEnabled }
     />
   );
 
@@ -155,7 +151,6 @@ const Tokens = () => {
           onSortChange={ handleSortChange }
           actionBar={ isMobile ? actionBar : null }
           hasActiveFilters={ Boolean(searchTerm || tokenTypes) }
-          tableTop={ hasMultipleTabs ? TABS_HEIGHT : undefined }
         />
       ),
     },
@@ -170,7 +165,6 @@ const Tokens = () => {
           actionBar={ isMobile ? actionBar : null }
           hasActiveFilters={ Boolean(searchTerm || bridgeChains) }
           description={ description }
-          tableTop={ hasMultipleTabs ? TABS_HEIGHT : undefined }
         />
       ),
     } : undefined,
@@ -178,15 +172,12 @@ const Tokens = () => {
 
   return (
     <>
-      <PageTitle
-        title={ config.meta.seo.enhancedDataEnabled ? `Tokens on ${ config.chain.name }` : 'Tokens' }
-        withTextAd
-      />
-      { !hasMultipleTabs && !isMobile && actionBar }
+      <PageTitle title="Tokens" withTextAd/>
+      { tabs.length === 1 && !isMobile && actionBar }
       <RoutedTabs
         tabs={ tabs }
         tabListProps={ isMobile ? undefined : TAB_LIST_PROPS }
-        rightSlot={ hasMultipleTabs && !isMobile ? actionBar : null }
+        rightSlot={ !isMobile ? actionBar : null }
         rightSlotProps={ !isMobile ? TABS_RIGHT_SLOT_PROPS : undefined }
         stickyEnabled={ !isMobile }
         onTabChange={ handleTabChange }

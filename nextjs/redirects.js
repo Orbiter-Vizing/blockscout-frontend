@@ -49,8 +49,16 @@ const oldUrls = [
     destination: '/account/custom-abi',
   },
   {
-    source: '/account/public-tags-request',
-    destination: '/public-tags/submit',
+    source: '/account/public_tags_request',
+    destination: '/account/public-tags-request',
+  },
+  {
+    source: '/account/public_tags_request/:id/edit',
+    destination: '/account/public-tags-request',
+  },
+  {
+    source: '/account/public_tags_request/new',
+    destination: '/account/public-tags-request',
   },
 
   // TRANSACTIONS

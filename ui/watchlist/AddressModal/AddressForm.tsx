@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Text,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { useMutation } from '@tanstack/react-query';
 import React, { useCallback, useState } from 'react';
@@ -68,6 +69,7 @@ type Checkboxes = 'notification' |
 
 const AddressForm: React.FC<Props> = ({ data, onSuccess, setAlertVisible, isAdd }) => {
   const [ pending, setPending ] = useState(false);
+  const formBackgroundColor = useColorModeValue('white', 'gray.900');
 
   let notificationsDefault = {} as Inputs['notification_settings'];
   if (!data?.notification_settings) {
@@ -140,15 +142,15 @@ const AddressForm: React.FC<Props> = ({ data, onSuccess, setAlertVisible, isAdd 
     return (
       <AddressInput<Inputs, 'address'>
         field={ field }
-        bgColor="dialog_bg"
+        backgroundColor={ formBackgroundColor }
         error={ errors.address }
       />
     );
-  }, [ errors ]);
+  }, [ errors, formBackgroundColor ]);
 
   const renderTagInput = useCallback(({ field }: {field: ControllerRenderProps<Inputs, 'tag'>}) => {
-    return <TagInput<Inputs, 'tag'> field={ field } error={ errors.tag } bgColor="dialog_bg"/>;
-  }, [ errors ]);
+    return <TagInput<Inputs, 'tag'> field={ field } error={ errors.tag } backgroundColor={ formBackgroundColor }/>;
+  }, [ errors, formBackgroundColor ]);
 
   // eslint-disable-next-line react/display-name
   const renderCheckbox = useCallback((text: string) => ({ field }: {field: ControllerRenderProps<Inputs, Checkboxes>}) => (

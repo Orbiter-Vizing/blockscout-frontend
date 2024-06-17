@@ -1,6 +1,6 @@
 import type {
-  SmartContractQueryMethodError,
-  SmartContractQueryMethodSuccess,
+  SmartContractQueryMethodReadError,
+  SmartContractQueryMethodReadSuccess,
   SmartContractReadMethod,
   SmartContractWriteMethod,
 } from 'types/api/contract';
@@ -94,7 +94,7 @@ export const read: Array<SmartContractReadMethod> = [
   },
 ];
 
-export const readResultSuccess: SmartContractQueryMethodSuccess = {
+export const readResultSuccess: SmartContractQueryMethodReadSuccess = {
   is_error: false,
   result: {
     names: [ 'amount' ],
@@ -104,7 +104,7 @@ export const readResultSuccess: SmartContractQueryMethodSuccess = {
   },
 };
 
-export const readResultError: SmartContractQueryMethodError = {
+export const readResultError: SmartContractQueryMethodReadError = {
   is_error: true,
   result: {
     message: 'Some shit happened',

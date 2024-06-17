@@ -23,7 +23,7 @@ const PublicTagMenuItem = ({ className, hash, onBeforeClick, type }: Props) => {
       return;
     }
 
-    router.push({ pathname: '/public-tags/submit', query: { addresses: [ hash ] } });
+    router.push({ pathname: '/account/public-tags-request', query: { address: hash } });
   }, [ hash, onBeforeClick, router ]);
 
   const element = (() => {

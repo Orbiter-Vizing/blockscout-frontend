@@ -1,6 +1,5 @@
 import React, { createContext, useContext } from 'react';
 
-import type { Route } from 'nextjs-routes';
 import type { Props as PageProps } from 'nextjs/getServerSideProps';
 
 type Props = {
@@ -12,7 +11,7 @@ const AppContext = createContext<PageProps>({
   cookies: '',
   referrer: '',
   query: {},
-  adBannerProvider: null,
+  adBannerProvider: undefined,
   apiData: null,
 });
 
@@ -24,6 +23,6 @@ export function AppContextProvider({ children, pageProps }: Props) {
   );
 }
 
-export function useAppContext<Pathname extends Route['pathname'] = never>() {
-  return useContext<PageProps<Pathname>>(AppContext);
+export function useAppContext() {
+  return useContext(AppContext);
 }

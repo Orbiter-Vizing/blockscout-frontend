@@ -4,6 +4,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useCallback } from 'react';
@@ -41,6 +42,7 @@ const ApiKeyForm: React.FC<Props> = ({ data, onClose, setAlertVisible }) => {
   });
   const apiFetch = useApiFetch();
   const queryClient = useQueryClient();
+  const formBackgroundColor = useColorModeValue('white', 'gray.900');
 
   const updateApiKey = (data: Inputs) => {
     const body = { name: data.name };
@@ -100,27 +102,25 @@ const ApiKeyForm: React.FC<Props> = ({ data, onClose, setAlertVisible }) => {
       <FormControl variant="floating" id="address">
         <Input
           { ...field }
-          bgColor="dialog_bg"
-          isReadOnly
+          isDisabled={ true }
         />
-        <FormLabel>Auto-generated API key token</FormLabel>
+        <FormLabel data-in-modal="true">Auto-generated API key token</FormLabel>
       </FormControl>
     );
   }, []);
 
   const renderNameInput = useCallback(({ field }: {field: ControllerRenderProps<Inputs, 'name'>}) => {
     return (
-      <FormControl variant="floating" id="name" isRequired bgColor="dialog_bg">
+      <FormControl variant="floating" id="name" isRequired backgroundColor={ formBackgroundColor }>
         <Input
           { ...field }
           isInvalid={ Boolean(errors.name) }
           maxLength={ NAME_MAX_LENGTH }
-          bgColor="dialog_bg"
         />
         <InputPlaceholder text="Application name for API key (e.g Web3 project)" error={ errors.name }/>
       </FormControl>
     );
-  }, [ errors ]);
+  }, [ errors, formBackgroundColor ]);
 
   return (
     <form noValidate onSubmit={ handleSubmit(onSubmit) }>

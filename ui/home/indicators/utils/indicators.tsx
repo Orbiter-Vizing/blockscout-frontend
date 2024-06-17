@@ -5,8 +5,8 @@ import type { TimeChartItem, TimeChartItemRaw } from 'ui/shared/chart/types';
 
 import config from 'configs/app';
 import { sortByDateDesc } from 'ui/shared/chart/utils/sorts';
+import * as TokenEntity from 'ui/shared/entities/token/TokenEntity';
 import IconSvg from 'ui/shared/IconSvg';
-import NativeTokenIcon from 'ui/shared/NativeTokenIcon';
 
 const nonNullTailReducer = (result: Array<TimeChartItemRaw>, item: TimeChartItemRaw) => {
   if (item.value === null && result.length === 0) {
@@ -40,6 +40,14 @@ const dailyTxsIndicator: TChainIndicator<'stats_charts_txs'> = {
   },
 };
 
+const nativeTokenData = {
+  name: config.chain.currency.name || '',
+  icon_url: '',
+  symbol: '',
+  address: '',
+  type: 'ERC-20' as const,
+};
+
 const coinPriceIndicator: TChainIndicator<'stats_charts_market'> = {
   id: 'coin_price',
   title: `${ config.chain.currency.symbol } price`,
@@ -47,7 +55,7 @@ const coinPriceIndicator: TChainIndicator<'stats_charts_market'> = {
     '$N/A' :
     '$' + Number(stats.coin_price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 }),
   valueDiff: (stats) => stats?.coin_price !== null ? stats?.coin_price_change_percentage : null,
-  icon: <NativeTokenIcon boxSize={ 6 }/>,
+  icon: <TokenEntity.Icon token={ nativeTokenData } boxSize={ 6 } marginRight={ 0 }/>,
   hint: `${ config.chain.currency.symbol } token daily price in USD.`,
   api: {
     resourceName: 'stats_charts_market',
@@ -70,7 +78,7 @@ const secondaryCoinPriceIndicator: TChainIndicator<'stats_charts_secondary_coin_
     '$N/A' :
     '$' + Number(stats.secondary_coin_price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 }),
   valueDiff: () => null,
-  icon: <NativeTokenIcon boxSize={ 6 }/>,
+  icon: <TokenEntity.Icon token={ nativeTokenData } boxSize={ 6 } marginRight={ 0 }/>,
   hint: `${ config.chain.secondaryCoin.symbol } token daily price in USD.`,
   api: {
     resourceName: 'stats_charts_secondary_coin_price',

@@ -7,9 +7,11 @@ import useApiQuery from 'lib/api/useApiQuery';
 import dayjs from 'lib/date/dayjs';
 import ContainerWithScrollY from 'ui/shared/ContainerWithScrollY';
 import FormModal from 'ui/shared/FormModal';
-import LinkExternal from 'ui/shared/links/LinkExternal';
+import LinkExternal from 'ui/shared/LinkExternal';
 
 import ContractSubmitAuditForm from './contractSubmitAuditForm/ContractSubmitAuditForm';
+
+const SCROLL_GRADIENT_HEIGHT = 24;
 
 type Props = {
   addressHash?: string;
@@ -25,6 +27,17 @@ const ContractSecurityAudits = ({ addressHash }: Props) => {
     },
   });
 
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [ hasScroll, setHasScroll ] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!containerRef.current) {
+      return;
+    }
+
+    setHasScroll(containerRef.current.scrollHeight >= containerRef.current.clientHeight + SCROLL_GRADIENT_HEIGHT / 2);
+  }, []);
+
   const formTitle = 'Submit audit';
 
   const modalProps = useDisclosure();
@@ -39,10 +52,12 @@ const ContractSecurityAudits = ({ addressHash }: Props) => {
       { data?.items && data.items.length > 0 && (
         <Box position="relative">
           <ContainerWithScrollY
-            gradientHeight={ 24 }
+            gradientHeight={ SCROLL_GRADIENT_HEIGHT }
+            hasScroll={ hasScroll }
             rowGap={ 1 }
             w="100%"
             maxH="80px"
+            ref={ containerRef }
             mt={ 2 }
           >
             { data.items.map(item => (

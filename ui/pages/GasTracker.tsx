@@ -1,4 +1,4 @@
-import { Alert, Box, Flex, Skeleton, chakra } from '@chakra-ui/react';
+import { Box, Flex, Skeleton, chakra } from '@chakra-ui/react';
 import React from 'react';
 
 import config from 'configs/app';
@@ -9,7 +9,6 @@ import GasTrackerChart from 'ui/gasTracker/GasTrackerChart';
 import GasTrackerNetworkUtilization from 'ui/gasTracker/GasTrackerNetworkUtilization';
 import GasTrackerPrices from 'ui/gasTracker/GasTrackerPrices';
 import GasInfoUpdateTimer from 'ui/shared/gas/GasInfoUpdateTimer';
-import NativeTokenIcon from 'ui/shared/NativeTokenIcon';
 import PageTitle from 'ui/shared/Page/PageTitle';
 
 const GasTracker = () => {
@@ -37,8 +36,7 @@ const GasTracker = () => {
       rowGap={ 1 }
       flexDir={{ base: 'column', lg: 'row' }}
     >
-      { typeof data?.network_utilization_percentage === 'number' &&
-        <GasTrackerNetworkUtilization percentage={ data.network_utilization_percentage } isLoading={ isLoading }/> }
+      { data?.network_utilization_percentage && <GasTrackerNetworkUtilization percentage={ data.network_utilization_percentage } isLoading={ isLoading }/> }
       { data?.gas_price_updated_at && (
         <Skeleton isLoaded={ !isLoading } whiteSpace="pre" display="flex" alignItems="center">
           <span>Last updated </span>
@@ -55,8 +53,7 @@ const GasTracker = () => {
         </Skeleton>
       ) }
       { data?.coin_price && (
-        <Skeleton isLoaded={ !isLoading } ml={{ base: 0, lg: 'auto' }} whiteSpace="pre" display="flex" alignItems="center">
-          <NativeTokenIcon mr={ 2 } boxSize={ 6 }/>
+        <Skeleton isLoaded={ !isLoading } ml={{ base: 0, lg: 'auto' }} whiteSpace="pre">
           <chakra.span color="text_secondary">{ config.chain.currency.symbol }</chakra.span>
           <span> ${ Number(data.coin_price).toLocaleString(undefined, { maximumFractionDigits: 2 }) }</span>
         </Skeleton>
@@ -64,31 +61,17 @@ const GasTracker = () => {
     </Flex>
   );
 
-  const content = (() => {
-    if (!isPlaceholderData && data?.gas_prices?.slow === null && data?.gas_prices.average === null && data.gas_prices.fast === null) {
-      return <Alert status="warning">No data available yet</Alert>;
-    }
-
-    return (
-      <>
-        { data?.gas_prices && <GasTrackerPrices prices={ data.gas_prices } isLoading={ isLoading }/> }
-        { config.features.stats.isEnabled && (
-          <Box mt={ 12 }>
-            <GasTrackerChart/>
-          </Box>
-        ) }
-      </>
-    );
-  })();
-
   return (
     <>
       <PageTitle
-        title={ config.meta.seo.enhancedDataEnabled ? `${ config.chain.name } gas tracker` : 'Gas tracker' }
+        title="Gas tracker"
         secondRow={ titleSecondRow }
         withTextAd
       />
-      { content }
+      { data?.gas_prices && <GasTrackerPrices prices={ data.gas_prices } isLoading={ isLoading }/> }
+      <Box mt={ 12 }>
+        <GasTrackerChart/>
+      </Box>
     </>
   );
 };

@@ -25,7 +25,7 @@ export function getTxCourseType(from: string, to: string | undefined, current?: 
 export const unknownAddress: Omit<AddressParam, 'hash'> = {
   is_contract: false,
   is_verified: false,
-  implementations: null,
+  implementation_name: '',
   name: '',
   private_tags: [],
   public_tags: [],

@@ -11,6 +11,10 @@ import WalletMenuMobile from 'ui/snippets/walletMenu/WalletMenuMobile';
 
 import Burger from './Burger';
 
+const LOGO_IMAGE_PROPS = {
+  margin: '0 auto',
+};
+
 type Props = {
   hideSearchBar?: boolean;
   renderSearchBar?: () => React.ReactNode;
@@ -36,17 +40,18 @@ const HeaderMobile = ({ hideSearchBar, renderSearchBar }: Props) => {
     >
       <Flex
         as="header"
-        paddingX={ 3 }
+        paddingX={ 4 }
         paddingY={ 2 }
         bgColor={ bgColor }
         width="100%"
         alignItems="center"
+        justifyContent="space-between"
         transitionProperty="box-shadow"
         transitionDuration="slow"
         boxShadow={ !inView && scrollDirection === 'down' ? 'md' : 'none' }
       >
         <Burger/>
-        <NetworkLogo ml={ 2 } mr="auto"/>
+        <NetworkLogo imageProps={ LOGO_IMAGE_PROPS }/>
         <Flex columnGap={ 2 }>
           { config.features.account.isEnabled ? <ProfileMenuMobile/> : <Box boxSize={ 10 }/> }
           { config.features.blockchainInteraction.isEnabled && <WalletMenuMobile/> }

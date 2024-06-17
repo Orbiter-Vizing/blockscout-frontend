@@ -16,7 +16,7 @@ const PAGE_PROPS = {
   cookies: '',
   referrer: '',
   query: {},
-  adBannerProvider: null,
+  adBannerProvider: undefined,
   apiData: null,
 };
 

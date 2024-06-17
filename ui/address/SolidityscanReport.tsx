@@ -1,4 +1,4 @@
-import { Box, Text, Icon, Popover, PopoverTrigger, PopoverContent, PopoverBody, useDisclosure } from '@chakra-ui/react';
+import { Box, Text, chakra, Icon, Popover, PopoverTrigger, PopoverContent, PopoverBody, useDisclosure } from '@chakra-ui/react';
 import React from 'react';
 
 // This icon doesn't work properly when it is in the sprite
@@ -7,16 +7,17 @@ import React from 'react';
 import solidityScanIcon from 'icons/brands/solidity_scan.svg';
 import useApiQuery from 'lib/api/useApiQuery';
 import { SOLIDITYSCAN_REPORT } from 'stubs/contract';
-import LinkExternal from 'ui/shared/links/LinkExternal';
+import LinkExternal from 'ui/shared/LinkExternal';
 import SolidityscanReportButton from 'ui/shared/solidityscanReport/SolidityscanReportButton';
 import SolidityscanReportDetails from 'ui/shared/solidityscanReport/SolidityscanReportDetails';
 import SolidityscanReportScore from 'ui/shared/solidityscanReport/SolidityscanReportScore';
 
 interface Props {
+  className?: string;
   hash: string;
 }
 
-const SolidityscanReport = ({ hash }: Props) => {
+const SolidityscanReport = ({ className, hash }: Props) => {
   const { isOpen, onToggle, onClose } = useDisclosure();
 
   const { data, isPlaceholderData, isError } = useApiQuery('contract_solidityscan_report', {
@@ -41,6 +42,7 @@ const SolidityscanReport = ({ hash }: Props) => {
     <Popover isOpen={ isOpen } onClose={ onClose } placement="bottom-start" isLazy>
       <PopoverTrigger>
         <SolidityscanReportButton
+          className={ className }
           score={ score }
           isLoading={ isPlaceholderData }
           onClick={ onToggle }
@@ -67,4 +69,4 @@ const SolidityscanReport = ({ hash }: Props) => {
   );
 };
 
-export default React.memo(SolidityscanReport);
+export default chakra(SolidityscanReport);

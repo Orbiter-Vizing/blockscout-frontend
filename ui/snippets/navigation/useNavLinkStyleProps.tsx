@@ -14,7 +14,7 @@ export default function useNavLinkProps({ isExpanded, isCollapsed, isActive }: P
 
   return {
     itemProps: {
-      py: '9px',
+      py: 2.5,
       display: 'flex',
       color: isActive ? colors.text.active : colors.text.default,
       bgColor: isActive ? colors.bg.active : colors.bg.default,

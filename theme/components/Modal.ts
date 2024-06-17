@@ -10,11 +10,11 @@ import { runIfFn } from '@chakra-ui/utils';
 const { defineMultiStyleConfig, definePartsStyle } =
   createMultiStyleConfigHelpers(parts.keys);
 
-const baseStyleDialog = defineStyle(() => {
+const baseStyleDialog = defineStyle((props) => {
   return {
     padding: 8,
     borderRadius: 'lg',
-    bg: 'dialog_bg',
+    bg: mode('white', 'gray.900')(props),
     margin: 'auto',
   };
 });
@@ -61,7 +61,7 @@ const baseStyleOverlay = defineStyle({
 });
 
 const baseStyle = definePartsStyle((props) => ({
-  dialog: runIfFn(baseStyleDialog),
+  dialog: runIfFn(baseStyleDialog, props),
   dialogContainer: baseStyleDialogContainer,
 
   header: runIfFn(baseStyleHeader, props),

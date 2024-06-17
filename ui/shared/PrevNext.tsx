@@ -32,7 +32,7 @@ const PrevNext = ({ className, onClick, prevLabel, nextLabel, isPrevDisabled, is
   }
 
   return (
-    <Box className={ className } display="flex">
+    <Box className={ className }>
       <Tooltip label={ prevLabel }>
         <IconButton
           aria-label="prev"

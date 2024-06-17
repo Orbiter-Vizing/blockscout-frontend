@@ -18,10 +18,9 @@ interface Props {
   className?: string;
   isLoading?: boolean;
   withFullscreen?: boolean;
-  autoplayVideo?: boolean;
 }
 
-const NftMedia = ({ imageUrl, animationUrl, className, isLoading, withFullscreen, autoplayVideo }: Props) => {
+const NftMedia = ({ imageUrl, animationUrl, className, isLoading, withFullscreen }: Props) => {
   const [ isMediaLoading, setIsMediaLoading ] = React.useState(true);
   const [ isLoadingError, setIsLoadingError ] = React.useState(false);
 
@@ -72,7 +71,7 @@ const NftMedia = ({ imageUrl, animationUrl, className, isLoading, withFullscreen
 
     switch (type) {
       case 'video':
-        return <NftVideo { ...props } autoPlay={ autoplayVideo }/>;
+        return <NftVideo { ...props }/>;
       case 'html':
         return <NftHtml { ...props }/>;
       case 'image':

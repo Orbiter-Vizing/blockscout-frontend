@@ -6,9 +6,8 @@ import config from 'configs/app';
 import * as cookies from 'lib/cookies';
 import { FEATURED_NETWORKS_MOCK } from 'mocks/config/network';
 import { contextWithAuth } from 'playwright/fixtures/auth';
-import { ENVS_MAP } from 'playwright/fixtures/mockEnvs';
 import { test, expect } from 'playwright/lib';
-import * as pwConfig from 'playwright/utils/config';
+import * as configs from 'playwright/utils/configs';
 
 import NavigationDesktop from './NavigationDesktop';
 
@@ -47,7 +46,7 @@ test.describe('no auth', () => {
   });
 
   test.describe('xl screen', () => {
-    test.use({ viewport: pwConfig.viewport.xl });
+    test.use({ viewport: configs.viewport.xl });
 
     test('+@dark-mode', async() => {
       await expect(component).toHaveScreenshot();
@@ -77,7 +76,7 @@ authTest.describe('auth', () => {
   });
 
   authTest.describe('xl screen', () => {
-    authTest.use({ viewport: pwConfig.viewport.xl });
+    authTest.use({ viewport: configs.viewport.xl });
 
     authTest('+@dark-mode', async() => {
       await expect(component).toHaveScreenshot();
@@ -86,7 +85,7 @@ authTest.describe('auth', () => {
 });
 
 test.describe('with tooltips', () => {
-  test.use({ viewport: pwConfig.viewport.xl });
+  test.use({ viewport: configs.viewport.xl });
 
   test('', async({ render, page }) => {
     const component = await render(
@@ -124,7 +123,7 @@ test.describe('with submenu', () => {
   });
 
   test.describe('xl screen', () => {
-    test.use({ viewport: pwConfig.viewport.xl });
+    test.use({ viewport: configs.viewport.xl });
 
     test('', async() => {
       await expect(component).toHaveScreenshot();
@@ -158,7 +157,7 @@ noSideBarCookieTest.describe('cookie set to false', () => {
   });
 
   noSideBarCookieTest.describe('xl screen', () => {
-    noSideBarCookieTest.use({ viewport: pwConfig.viewport.xl });
+    noSideBarCookieTest.use({ viewport: configs.viewport.xl });
 
     noSideBarCookieTest('', async() => {
       const networkMenu = component.locator('button[aria-label="Network menu"]');
@@ -203,7 +202,7 @@ test('hover +@dark-mode', async({ render }) => {
 });
 
 test.describe('hover xl screen', () => {
-  test.use({ viewport: pwConfig.viewport.xl });
+  test.use({ viewport: configs.viewport.xl });
 
   test('+@dark-mode', async({ render }) => {
     const component = await render(
@@ -216,38 +215,5 @@ test.describe('hover xl screen', () => {
 
     await component.locator('header').hover();
     await expect(component).toHaveScreenshot();
-  });
-});
-
-test.describe('with highlighted routes', () => {
-  let component: Locator;
-
-  test.beforeEach(async({ render, mockEnvs }) => {
-    await mockEnvs(ENVS_MAP.navigationHighlightedRoutes);
-
-    component = await render(
-      <Flex w="100%" minH="100vh" alignItems="stretch">
-        <NavigationDesktop/>
-        <Box bgColor="lightpink" w="100%"/>
-      </Flex>,
-      { hooksConfig },
-    );
-  });
-
-  test('+@dark-mode', async() => {
-    await expect(component).toHaveScreenshot();
-  });
-
-  test('with submenu', async({ page }) => {
-    await page.locator('a[aria-label="Blockchain link group"]').hover();
-    await expect(component).toHaveScreenshot();
-  });
-
-  test.describe('xl screen', () => {
-    test.use({ viewport: pwConfig.viewport.xl });
-
-    test('+@dark-mode', async() => {
-      await expect(component).toHaveScreenshot();
-    });
   });
 });

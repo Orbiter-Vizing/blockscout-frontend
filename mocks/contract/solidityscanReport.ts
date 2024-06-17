@@ -1,8 +1,5 @@
-import type { SolidityscanReport } from 'types/api/contract';
-
-export const solidityscanReportAverage: SolidityscanReport = {
+export const solidityscanReportAverage = {
   scan_report: {
-    contractname: 'foo',
     scan_status: 'scan_done',
     scan_summary: {
       issue_severity_distribution: {
@@ -23,9 +20,8 @@ export const solidityscanReportAverage: SolidityscanReport = {
   },
 };
 
-export const solidityscanReportGreat: SolidityscanReport = {
+export const solidityscanReportGreat = {
   scan_report: {
-    contractname: 'foo',
     scan_status: 'scan_done',
     scan_summary: {
       issue_severity_distribution: {
@@ -46,9 +42,8 @@ export const solidityscanReportGreat: SolidityscanReport = {
   },
 };
 
-export const solidityscanReportLow: SolidityscanReport = {
+export const solidityscanReportLow = {
   scan_report: {
-    contractname: 'foo',
     scan_status: 'scan_done',
     scan_summary: {
       issue_severity_distribution: {

@@ -21,8 +21,7 @@ const TokenInfoFieldRequesterEmail = ({ control, isReadOnly }: Props) => {
           { ...field }
           required
           isInvalid={ Boolean(fieldState.error) }
-          isDisabled={ formState.isSubmitting }
-          isReadOnly={ isReadOnly }
+          isDisabled={ formState.isSubmitting || isReadOnly }
           autoComplete="off"
         />
         <InputPlaceholder text="Requester email" error={ fieldState.error }/>

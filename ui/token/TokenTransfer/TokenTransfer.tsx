@@ -7,7 +7,6 @@ import type { TokenInfo } from 'types/api/token';
 
 import useGradualIncrement from 'lib/hooks/useGradualIncrement';
 import useIsMobile from 'lib/hooks/useIsMobile';
-import useIsMounted from 'lib/hooks/useIsMounted';
 import useSocketChannel from 'lib/socket/useSocketChannel';
 import useSocketMessage from 'lib/socket/useSocketMessage';
 import ActionBar from 'ui/shared/ActionBar';
@@ -18,18 +17,14 @@ import * as SocketNewItemsNotice from 'ui/shared/SocketNewItemsNotice';
 import TokenTransferList from 'ui/token/TokenTransfer/TokenTransferList';
 import TokenTransferTable from 'ui/token/TokenTransfer/TokenTransferTable';
 
-const TABS_HEIGHT = 88;
-
 type Props = {
   transfersQuery: QueryWithPagesResult<'token_transfers'> | QueryWithPagesResult<'token_instance_transfers'>;
   tokenId?: string;
   token?: TokenInfo;
-  shouldRender?: boolean;
 }
 
-const TokenTransfer = ({ transfersQuery, tokenId, token, shouldRender = true }: Props) => {
+const TokenTransfer = ({ transfersQuery, tokenId, token }: Props) => {
   const isMobile = useIsMobile();
-  const isMounted = useIsMounted();
   const router = useRouter();
   const { isError, isPlaceholderData, data, pagination } = transfersQuery;
 
@@ -60,16 +55,13 @@ const TokenTransfer = ({ transfersQuery, tokenId, token, shouldRender = true }: 
     handler: handleNewTransfersMessage,
   });
 
-  if (!isMounted || !shouldRender) {
-    return null;
-  }
-
   const content = data?.items ? (
+
     <>
       <Box display={{ base: 'none', lg: 'block' }}>
         <TokenTransferTable
           data={ data?.items }
-          top={ pagination.isVisible ? TABS_HEIGHT : 0 }
+          top={ pagination.isVisible ? 80 : 0 }
           showSocketInfo={ pagination.page === 1 }
           socketInfoAlert={ socketAlert }
           socketInfoNum={ newItemsCount }

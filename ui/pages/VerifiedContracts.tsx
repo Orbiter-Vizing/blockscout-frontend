@@ -5,7 +5,6 @@ import React from 'react';
 import type { VerifiedContractsFilters } from 'types/api/contracts';
 import type { VerifiedContractsSorting, VerifiedContractsSortingField, VerifiedContractsSortingValue } from 'types/api/verifiedContracts';
 
-import config from 'configs/app';
 import useDebounce from 'lib/hooks/useDebounce';
 import useIsMobile from 'lib/hooks/useIsMobile';
 import { apos } from 'lib/html-entities';
@@ -129,10 +128,7 @@ const VerifiedContracts = () => {
 
   return (
     <Box>
-      <PageTitle
-        title={ config.meta.seo.enhancedDataEnabled ? `Verified ${ config.chain.name } contracts` : 'Verified contracts' }
-        withTextAd
-      />
+      <PageTitle title="Verified contracts" withTextAd/>
       <VerifiedContractsCounters/>
       <DataListDisplay
         isError={ isError }

@@ -41,6 +41,7 @@ export const mediaStyleProps = {
 };
 
 export const videoPlayProps = {
+  autoPlay: true,
   disablePictureInPicture: true,
   loop: true,
   muted: true,

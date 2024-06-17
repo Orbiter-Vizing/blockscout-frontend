@@ -1,14 +1,30 @@
+import { test as base, expect } from '@playwright/experimental-ct-react';
 import React from 'react';
 
 import * as depositMock from 'mocks/l2deposits/deposits';
-import { ENVS_MAP } from 'playwright/fixtures/mockEnvs';
-import { test, expect } from 'playwright/lib';
+import contextWithEnvs from 'playwright/fixtures/contextWithEnvs';
+import TestApp from 'playwright/TestApp';
+import buildApiUrl from 'playwright/utils/buildApiUrl';
+import * as configs from 'playwright/utils/configs';
 
 import LatestDeposits from './LatestDeposits';
 
-test('default view +@mobile +@dark-mode', async({ render, mockApiResponse, mockEnvs }) => {
-  await mockEnvs(ENVS_MAP.optimisticRollup);
-  mockApiResponse('homepage_deposits', depositMock.data.items);
-  const component = await render(<LatestDeposits/>);
+const test = base.extend({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  context: contextWithEnvs(configs.featureEnvs.optimisticRollup) as any,
+});
+
+test('default view +@mobile +@dark-mode', async({ mount, page }) => {
+  await page.route(buildApiUrl('homepage_deposits'), (route) => route.fulfill({
+    status: 200,
+    body: JSON.stringify(depositMock.data.items),
+  }));
+
+  const component = await mount(
+    <TestApp>
+      <LatestDeposits/>
+    </TestApp>,
+  );
+
   await expect(component).toHaveScreenshot();
 });

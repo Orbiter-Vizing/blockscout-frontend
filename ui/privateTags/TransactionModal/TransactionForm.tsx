@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useCallback, useState } from 'react';
@@ -33,6 +34,7 @@ type Inputs = {
 
 const TransactionForm: React.FC<Props> = ({ data, onClose, onSuccess, setAlertVisible }) => {
   const [ pending, setPending ] = useState(false);
+  const formBackgroundColor = useColorModeValue('white', 'gray.900');
 
   const { control, handleSubmit, formState: { errors, isDirty }, setError } = useForm<Inputs>({
     mode: 'onTouched',
@@ -88,12 +90,12 @@ const TransactionForm: React.FC<Props> = ({ data, onClose, onSuccess, setAlertVi
   };
 
   const renderTransactionInput = useCallback(({ field }: {field: ControllerRenderProps<Inputs, 'transaction'>}) => {
-    return <TransactionInput field={ field } error={ errors.transaction } bgColor="dialog_bg"/>;
-  }, [ errors ]);
+    return <TransactionInput field={ field } error={ errors.transaction } backgroundColor={ formBackgroundColor }/>;
+  }, [ errors, formBackgroundColor ]);
 
   const renderTagInput = useCallback(({ field }: {field: ControllerRenderProps<Inputs, 'tag'>}) => {
-    return <TagInput<Inputs, 'tag'> field={ field } error={ errors.tag } bgColor="dialog_bg"/>;
-  }, [ errors ]);
+    return <TagInput<Inputs, 'tag'> field={ field } error={ errors.tag } backgroundColor={ formBackgroundColor }/>;
+  }, [ errors, formBackgroundColor ]);
 
   return (
     <form noValidate onSubmit={ handleSubmit(onSubmit) }>

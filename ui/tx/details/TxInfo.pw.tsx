@@ -1,119 +1,192 @@
+import { test, expect } from '@playwright/experimental-ct-react';
 import React from 'react';
 
 import * as txMock from 'mocks/txs/tx';
-import { ENVS_MAP } from 'playwright/fixtures/mockEnvs';
-import { test, expect } from 'playwright/lib';
-import * as pwConfig from 'playwright/utils/config';
+import contextWithEnvs from 'playwright/fixtures/contextWithEnvs';
+import TestApp from 'playwright/TestApp';
+import * as configs from 'playwright/utils/configs';
 
 import TxInfo from './TxInfo';
 
-test('between addresses +@mobile +@dark-mode', async({ render, page }) => {
-  const component = await render(<TxInfo data={ txMock.base } isLoading={ false }/>);
+const hooksConfig = {
+  router: {
+    query: { hash: 1 },
+  },
+};
+
+test('between addresses +@mobile +@dark-mode', async({ mount, page }) => {
+  const component = await mount(
+    <TestApp>
+      <TxInfo data={ txMock.base } isLoading={ false }/>
+    </TestApp>,
+    { hooksConfig },
+  );
 
   await page.getByText('View details').click();
 
   await expect(component).toHaveScreenshot({
-    mask: [ page.locator(pwConfig.adsBannerSelector) ],
-    maskColor: pwConfig.maskColor,
+    mask: [ page.locator(configs.adsBannerSelector) ],
+    maskColor: configs.maskColor,
   });
 });
 
-test('creating contact', async({ render, page }) => {
-  const component = await render(<TxInfo data={ txMock.withContractCreation } isLoading={ false }/>);
+test('creating contact', async({ mount, page }) => {
+  const component = await mount(
+    <TestApp>
+      <TxInfo data={ txMock.withContractCreation } isLoading={ false }/>
+    </TestApp>,
+    { hooksConfig },
+  );
 
   await expect(component).toHaveScreenshot({
-    mask: [ page.locator(pwConfig.adsBannerSelector) ],
-    maskColor: pwConfig.maskColor,
+    mask: [ page.locator(configs.adsBannerSelector) ],
+    maskColor: configs.maskColor,
   });
 });
 
-test('with token transfer +@mobile', async({ render, page }) => {
-  const component = await render(<TxInfo data={ txMock.withTokenTransfer } isLoading={ false }/>);
+test('with token transfer +@mobile', async({ mount, page }) => {
+  const component = await mount(
+    <TestApp>
+      <TxInfo data={ txMock.withTokenTransfer } isLoading={ false }/>
+    </TestApp>,
+    { hooksConfig },
+  );
 
   await expect(component).toHaveScreenshot({
-    mask: [ page.locator(pwConfig.adsBannerSelector) ],
-    maskColor: pwConfig.maskColor,
+    mask: [ page.locator(configs.adsBannerSelector) ],
+    maskColor: configs.maskColor,
   });
 });
 
-test('with decoded revert reason', async({ render, page }) => {
-  const component = await render(<TxInfo data={ txMock.withDecodedRevertReason } isLoading={ false }/>);
+test('with decoded revert reason', async({ mount, page }) => {
+  const component = await mount(
+    <TestApp>
+      <TxInfo data={ txMock.withDecodedRevertReason } isLoading={ false }/>
+    </TestApp>,
+    { hooksConfig },
+  );
 
   await expect(component).toHaveScreenshot({
-    mask: [ page.locator(pwConfig.adsBannerSelector) ],
-    maskColor: pwConfig.maskColor,
+    mask: [ page.locator(configs.adsBannerSelector) ],
+    maskColor: configs.maskColor,
   });
 });
 
-test('with decoded raw reason', async({ render, page }) => {
-  const component = await render(<TxInfo data={ txMock.withRawRevertReason } isLoading={ false }/>);
+test('with decoded raw reason', async({ mount, page }) => {
+  const component = await mount(
+    <TestApp>
+      <TxInfo data={ txMock.withRawRevertReason } isLoading={ false }/>
+    </TestApp>,
+    { hooksConfig },
+  );
 
   await expect(component).toHaveScreenshot({
-    mask: [ page.locator(pwConfig.adsBannerSelector) ],
-    maskColor: pwConfig.maskColor,
+    mask: [ page.locator(configs.adsBannerSelector) ],
+    maskColor: configs.maskColor,
   });
 });
 
-test('pending', async({ render, page }) => {
-  const component = await render(<TxInfo data={ txMock.pending } isLoading={ false }/>);
+test('pending', async({ mount, page }) => {
+  const component = await mount(
+    <TestApp>
+      <TxInfo data={ txMock.pending } isLoading={ false }/>
+    </TestApp>,
+    { hooksConfig },
+  );
 
   await page.getByText('View details').click();
 
   await expect(component).toHaveScreenshot({
-    mask: [ page.locator(pwConfig.adsBannerSelector) ],
-    maskColor: pwConfig.maskColor,
+    mask: [ page.locator(configs.adsBannerSelector) ],
+    maskColor: configs.maskColor,
   });
 });
 
-// NOTE: On the screenshot from the test for the mobile device, the scroll overlay is not quite right.
-// I checked it manually in the real device, there was not any issue with it
-test('with actions uniswap +@mobile +@dark-mode', async({ render, page }) => {
-  const component = await render(<TxInfo data={ txMock.withActionsUniswap } isLoading={ false }/>);
+test('with actions uniswap +@mobile +@dark-mode', async({ mount, page }) => {
+  const component = await mount(
+    <TestApp>
+      <TxInfo data={ txMock.withActionsUniswap } isLoading={ false }/>
+    </TestApp>,
+    { hooksConfig },
+  );
 
   await expect(component).toHaveScreenshot({
-    mask: [ page.locator(pwConfig.adsBannerSelector) ],
-    maskColor: pwConfig.maskColor,
+    mask: [ page.locator(configs.adsBannerSelector) ],
+    maskColor: configs.maskColor,
   });
 });
 
-test('with blob', async({ render, page }) => {
-  const component = await render(<TxInfo data={ txMock.withBlob } isLoading={ false }/>);
+test('with blob', async({ mount, page }) => {
+  const component = await mount(
+    <TestApp>
+      <TxInfo data={ txMock.withBlob } isLoading={ false }/>
+    </TestApp>,
+    { hooksConfig },
+  );
 
   await page.getByText('View details').click();
 
   await expect(component).toHaveScreenshot({
-    mask: [ page.locator(pwConfig.adsBannerSelector) ],
-    maskColor: pwConfig.maskColor,
+    mask: [ page.locator(configs.adsBannerSelector) ],
+    maskColor: configs.maskColor,
   });
 });
 
-test('l2', async({ render, page, mockEnvs }) => {
-  await mockEnvs(ENVS_MAP.optimisticRollup);
-  const component = await render(<TxInfo data={ txMock.l2tx } isLoading={ false }/>);
+const l2Test = test.extend({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  context: contextWithEnvs(configs.featureEnvs.optimisticRollup) as any,
+});
+
+l2Test('l2', async({ mount, page }) => {
+  const component = await mount(
+    <TestApp>
+      <TxInfo data={ txMock.l2tx } isLoading={ false }/>
+    </TestApp>,
+    { hooksConfig },
+  );
+
   await expect(component).toHaveScreenshot({
-    mask: [ page.locator(pwConfig.adsBannerSelector) ],
-    maskColor: pwConfig.maskColor,
+    mask: [ page.locator(configs.adsBannerSelector) ],
+    maskColor: configs.maskColor,
   });
 });
 
-test('without testnet warning', async({ render, page, mockEnvs }) => {
-  await mockEnvs([
-    [ 'NEXT_PUBLIC_IS_TESTNET', 'false' ],
-  ]);
-  const component = await render(<TxInfo data={ txMock.l2tx } isLoading={ false }/>);
+const mainnetTest = test.extend({
+  context: contextWithEnvs([
+    { name: 'NEXT_PUBLIC_IS_TESTNET', value: 'false' },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ]) as any,
+});
+
+mainnetTest('without testnet warning', async({ mount, page }) => {
+  const component = await mount(
+    <TestApp>
+      <TxInfo data={ txMock.l2tx } isLoading={ false }/>
+    </TestApp>,
+    { hooksConfig },
+  );
 
   await expect(component).toHaveScreenshot({
-    mask: [ page.locator(pwConfig.adsBannerSelector) ],
-    maskColor: pwConfig.maskColor,
+    mask: [ page.locator(configs.adsBannerSelector) ],
+    maskColor: configs.maskColor,
   });
 });
 
-test('stability customization', async({ render, page, mockEnvs }) => {
-  await mockEnvs(ENVS_MAP.stabilityEnvs);
-  const component = await render(<TxInfo data={ txMock.stabilityTx } isLoading={ false }/>);
+const stabilityTest = test.extend({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  context: contextWithEnvs(configs.stabilityEnvs) as any,
+});
+
+stabilityTest('stability customization', async({ mount, page }) => {
+  const component = await mount(
+    <TestApp>
+      <TxInfo data={ txMock.stabilityTx } isLoading={ false }/>
+    </TestApp>,
+    { hooksConfig },
+  );
 
   await expect(component).toHaveScreenshot({
-    mask: [ page.locator(pwConfig.adsBannerSelector) ],
-    maskColor: pwConfig.maskColor,
+    mask: [ page.locator(configs.adsBannerSelector) ],
+    maskColor: configs.maskColor,
   });
 });

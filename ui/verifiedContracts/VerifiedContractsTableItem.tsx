@@ -7,7 +7,6 @@ import type { VerifiedContract } from 'types/api/contracts';
 import config from 'configs/app';
 import { CONTRACT_LICENSES } from 'lib/contracts/licenses';
 import dayjs from 'lib/date/dayjs';
-import ContractCertifiedLabel from 'ui/shared/ContractCertifiedLabel';
 import CopyToClipboard from 'ui/shared/CopyToClipboard';
 import AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import HashStringShorten from 'ui/shared/HashStringShorten';
@@ -35,15 +34,13 @@ const VerifiedContractsTableItem = ({ data, isLoading }: Props) => {
   return (
     <Tr>
       <Td>
-        <Flex alignItems="center" mt={ 1 }>
-          <AddressEntity
-            address={ data.address }
-            isLoading={ isLoading }
-            query={{ tab: 'contract' }}
-            noCopy
-          />
-          { data.certified && <ContractCertifiedLabel iconSize={ 5 } boxSize={ 5 } ml={ 2 }/> }
-        </Flex>
+        <AddressEntity
+          address={ data.address }
+          isLoading={ isLoading }
+          query={{ tab: 'contract' }}
+          noCopy
+          mt={ 1 }
+        />
         <Flex alignItems="center" ml={ 7 }>
           <Skeleton isLoaded={ !isLoading } color="text_secondary" my={ 1 }>
             <HashStringShorten hash={ data.address.hash } isTooltipDisabled/>

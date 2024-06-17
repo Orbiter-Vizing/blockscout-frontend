@@ -14,25 +14,17 @@ import IconSvg from 'ui/shared/IconSvg';
 
 import StatsItem from './StatsItem';
 
+const hasGasTracker = config.features.gasTracker.isEnabled;
 const hasAvgBlockTime = config.UI.homepage.showAvgBlockTime;
 const rollupFeature = config.features.rollup;
 
 const Stats = () => {
-  const [ hasGasTracker, setHasGasTracker ] = React.useState(config.features.gasTracker.isEnabled);
   const { data, isPlaceholderData, isError, dataUpdatedAt } = useApiQuery('stats', {
     queryOptions: {
       refetchOnMount: false,
       placeholderData: HOMEPAGE_STATS,
     },
   });
-
-  React.useEffect(() => {
-    if (!isPlaceholderData && !data?.gas_prices?.average) {
-      setHasGasTracker(false);
-    }
-  // should run only after initial fetch
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ isPlaceholderData ]);
 
   const zkEvmLatestBatchQuery = useApiQuery('homepage_zkevm_latest_batch', {
     queryOptions: {
@@ -69,7 +61,7 @@ const Stats = () => {
     data.rootstock_locked_btc && itemsCount++;
     rollupFeature.isEnabled && data.last_output_root_size && itemsCount++;
     const isOdd = Boolean(itemsCount % 2);
-    const gasInfoTooltip = hasGasTracker && data.gas_prices && data.gas_prices.average ? (
+    const gasInfoTooltip = hasGasTracker && data.gas_prices ? (
       <GasInfoTooltip data={ data } dataUpdatedAt={ dataUpdatedAt }>
         <IconSvg
           isLoading={ isLoading }
@@ -149,7 +141,7 @@ const Stats = () => {
           <StatsItem
             icon="gas"
             title="Gas tracker"
-            value={ data.gas_prices.average ? <GasPrice data={ data.gas_prices.average }/> : 'N/A' }
+            value={ <GasPrice data={ data.gas_prices.average }/> }
             _last={ isOdd ? lastItemTouchStyle : undefined }
             tooltip={ gasInfoTooltip }
             isLoading={ isLoading }
@@ -172,8 +164,8 @@ const Stats = () => {
     <Grid
       gridTemplateColumns={{ lg: `repeat(${ itemsCount }, 1fr)`, base: '1fr 1fr' }}
       gridTemplateRows={{ lg: 'none', base: undefined }}
-      gridGap={{ base: 1, lg: 2 }}
-      marginTop={ 3 }
+      gridGap="10px"
+      marginTop="24px"
     >
       { content }
     </Grid>

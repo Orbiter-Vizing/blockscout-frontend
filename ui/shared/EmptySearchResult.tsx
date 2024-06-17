@@ -16,21 +16,23 @@ const EmptySearchResult = ({ text }: Props) => {
       display="flex"
       flexDirection="column"
       alignItems="center"
-      justifyContent="center"
-      mt="50px"
     >
-      <Icon
-        as={ emptySearchResultIcon }
-        w={{ base: '160px', sm: '240px' }}
-        h="auto"
-        mb={{ base: 4, sm: 6 }}
-      />
+      <Icon as={ emptySearchResultIcon } boxSize={ 60 }/>
 
-      <Heading as="h4" size="sm" mb={ 2 }>
+      <Heading
+        as="h3"
+        marginBottom={ 2 }
+        fontSize={{ base: '2xl', sm: '3xl' }}
+        fontWeight="semibold"
+      >
         No results
       </Heading>
 
-      <Text fontSize={{ base: 'sm', sm: 'md' }} align="center">
+      <Text
+        fontSize={{ base: 'sm' }}
+        variant="secondary"
+        align="center"
+      >
         { text }
       </Text>
     </Box>

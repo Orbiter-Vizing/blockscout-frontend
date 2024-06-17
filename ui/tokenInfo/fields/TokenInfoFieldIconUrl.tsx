@@ -58,8 +58,7 @@ const TokenInfoFieldIconUrl = ({ control, isReadOnly, trigger }: Props) => {
           { ...field }
           onBlur={ handleBlur }
           isInvalid={ Boolean(fieldState.error) }
-          isDisabled={ formState.isSubmitting }
-          isReadOnly={ isReadOnly }
+          isDisabled={ formState.isSubmitting || isReadOnly }
           autoComplete="off"
           required
         />

@@ -1,12 +1,18 @@
+import { test, expect } from '@playwright/experimental-ct-react';
 import React from 'react';
 
 import * as addressMock from 'mocks/address/address';
-import { test, expect } from 'playwright/lib';
+import TestApp from 'playwright/TestApp';
 
 import AddressQrCode from './AddressQrCode';
 
-test('default view +@mobile +@dark-mode', async({ render, page }) => {
-  await render(<AddressQrCode address={ addressMock.withoutName }/>);
+test('default view +@mobile +@dark-mode', async({ mount, page }) => {
+  await mount(
+    <TestApp>
+      <AddressQrCode address={ addressMock.withoutName }/>
+    </TestApp>,
+  );
   await page.getByRole('button', { name: /qr code/i }).click();
+
   await expect(page).toHaveScreenshot();
 });

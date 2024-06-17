@@ -22,8 +22,7 @@ const TokenInfoFieldPriceTicker = ({ control, isReadOnly, name, label }: Props) 
         <Input
           { ...field }
           isInvalid={ Boolean(fieldState.error) }
-          isDisabled={ formState.isSubmitting }
-          isReadOnly={ isReadOnly }
+          isDisabled={ formState.isSubmitting || isReadOnly }
           autoComplete="off"
         />
         <InputPlaceholder text={ label } error={ fieldState.error }/>

@@ -1,11 +1,18 @@
-import noop from 'lodash/noop';
+import { test, expect } from '@playwright/experimental-ct-react';
 import React from 'react';
 
-import { test, expect } from 'playwright/lib';
+import TestApp from 'playwright/TestApp';
 
 import ContractSubmitAuditForm from './ContractSubmitAuditForm';
 
-test('base view', async({ render }) => {
-  const component = await render(<ContractSubmitAuditForm address="hash" onSuccess={ noop }/>);
+test('base view', async({ mount }) => {
+
+  const component = await mount(
+    <TestApp>
+      { /* eslint-disable-next-line react/jsx-no-bind */ }
+      <ContractSubmitAuditForm address="hash" onSuccess={ () => {} }/>
+    </TestApp>,
+  );
+
   await expect(component).toHaveScreenshot();
 });

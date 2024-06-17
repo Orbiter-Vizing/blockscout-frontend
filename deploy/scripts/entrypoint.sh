@@ -21,7 +21,6 @@ export_envs_from_preset() {
     "NEXT_PUBLIC_APP_HOST"
     "NEXT_PUBLIC_APP_PORT"
     "NEXT_PUBLIC_APP_ENV"
-    "NEXT_PUBLIC_API_WEBSOCKET_PROTOCOL"
   )
 
   while IFS='=' read -r name value; do
@@ -36,7 +35,7 @@ export_envs_from_preset() {
 export_envs_from_preset
 
 # Download external assets
-./download_assets.sh ./public/assets/configs
+./download_assets.sh ./public/assets
 
 # Check run-time ENVs values
 ./validate_envs.sh

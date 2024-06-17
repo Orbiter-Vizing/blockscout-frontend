@@ -9,8 +9,6 @@ import NavLink from 'ui/snippets/navigation/NavLink';
 
 import NavLinkGroupMobile from './NavLinkGroupMobile';
 
-const DRAWER_WIDTH = 330;
-
 interface Props {
   onNavLinkClick?: () => void;
   isMarketplaceAppPage?: boolean;
@@ -22,17 +20,17 @@ const NavigationMobile = ({ onNavLinkClick, isMarketplaceAppPage }: Props) => {
   const [ openedGroupIndex, setOpenedGroupIndex ] = React.useState(-1);
 
   const mainX = useMotionValue(0);
-  const subX = useMotionValue(DRAWER_WIDTH);
+  const subX = useMotionValue(250);
 
   const onGroupItemOpen = (index: number) => () => {
     setOpenedGroupIndex(index);
-    animate(mainX, -DRAWER_WIDTH, { ease: 'easeInOut' });
+    animate(mainX, -250, { ease: 'easeInOut' });
     animate(subX, 0, { ease: 'easeInOut' });
   };
 
   const onGroupItemClose = useCallback(() => {
     animate(mainX, 0, { ease: 'easeInOut' });
-    animate(subX, DRAWER_WIDTH, { ease: 'easeInOut', onComplete: () => setOpenedGroupIndex(-1) });
+    animate(subX, 250, { ease: 'easeInOut', onComplete: () => setOpenedGroupIndex(-1) });
   }, [ mainX, subX ]);
 
   const hasAccount = useHasAccount();
@@ -76,8 +74,8 @@ const NavigationMobile = ({ onNavLinkClick, isMarketplaceAppPage }: Props) => {
         { hasAccount && (
           <Box
             as="nav"
-            mt={ 3 }
-            pt={ 3 }
+            mt={ 6 }
+            pt={ 6 }
             borderTopWidth="1px"
             borderColor="divider"
           >

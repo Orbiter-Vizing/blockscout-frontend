@@ -18,7 +18,6 @@ import type { QueryWithPagesResult } from 'ui/shared/pagination/useQueryWithPage
 import * as SocketNewItemsNotice from 'ui/shared/SocketNewItemsNotice';
 
 const OVERLOAD_COUNT = 75;
-const TABS_HEIGHT = 88;
 
 interface Props {
   type?: BlockType;
@@ -96,7 +95,7 @@ const BlocksContent = ({ type, query }: Props) => {
       <Box display={{ base: 'none', lg: 'block' }}>
         <BlocksTable
           data={ query.data.items }
-          top={ query.pagination.isVisible ? TABS_HEIGHT : 0 }
+          top={ query.pagination.isVisible ? 80 : 0 }
           page={ query.pagination.page }
           isLoading={ query.isPlaceholderData }
           showSocketInfo={ query.pagination.page === 1 }

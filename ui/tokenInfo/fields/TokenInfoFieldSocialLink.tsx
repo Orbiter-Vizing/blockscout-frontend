@@ -42,8 +42,7 @@ const TokenInfoFieldSocialLink = ({ control, isReadOnly, name }: Props) => {
           <Input
             { ...field }
             isInvalid={ Boolean(fieldState.error) }
-            isDisabled={ formState.isSubmitting }
-            isReadOnly={ isReadOnly }
+            isDisabled={ formState.isSubmitting || isReadOnly }
             autoComplete="off"
           />
           <InputPlaceholder text={ SETTINGS[name].label } error={ fieldState.error }/>

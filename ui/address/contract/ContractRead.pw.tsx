@@ -1,30 +1,37 @@
+import { test, expect } from '@playwright/experimental-ct-react';
 import React from 'react';
 
-import buildUrl from 'lib/api/buildUrl';
 import * as contractMethodsMock from 'mocks/contract/methods';
-import { test, expect } from 'playwright/lib';
+import TestApp from 'playwright/TestApp';
+import buildApiUrl from 'playwright/utils/buildApiUrl';
 
 import ContractRead from './ContractRead';
 
 const addressHash = 'hash';
+const CONTRACT_READ_METHODS_API_URL = buildApiUrl('contract_methods_read', { hash: addressHash }) + '?is_custom_abi=false';
+const CONTRACT_QUERY_METHOD_API_URL = buildApiUrl('contract_method_query', { hash: addressHash }) + '?is_custom_abi=false';
 const hooksConfig = {
   router: {
     query: { hash: addressHash },
   },
 };
 
-test('base view +@mobile +@dark-mode', async({ render, mockApiResponse, page }) => {
-  await mockApiResponse(
-    'contract_methods_read',
-    contractMethodsMock.read,
-    { pathParams: { hash: addressHash }, queryParams: { is_custom_abi: false } },
-  );
-  const CONTRACT_QUERY_METHOD_API_URL = buildUrl('contract_method_query', { hash: addressHash }, { is_custom_abi: false });
+test('base view +@mobile +@dark-mode', async({ mount, page }) => {
+  await page.route(CONTRACT_READ_METHODS_API_URL, (route) => route.fulfill({
+    status: 200,
+    body: JSON.stringify(contractMethodsMock.read),
+  }));
   await page.route(CONTRACT_QUERY_METHOD_API_URL, (route) => route.fulfill({
     status: 200,
     body: JSON.stringify(contractMethodsMock.readResultSuccess),
   }));
-  const component = await render(<ContractRead/>, { hooksConfig });
+
+  const component = await mount(
+    <TestApp>
+      <ContractRead/>
+    </TestApp>,
+    { hooksConfig },
+  );
 
   await component.getByText(/expand all/i).click();
 

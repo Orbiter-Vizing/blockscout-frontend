@@ -9,7 +9,6 @@ import BeaconChainWithdrawalsTable from 'ui/withdrawals/beaconChain/BeaconChainW
 type Props = {
   blockWithdrawalsQuery: QueryWithPagesResult<'block_withdrawals'>;
 }
-const TABS_HEIGHT = 88;
 
 const BlockWithdrawals = ({ blockWithdrawalsQuery }: Props) => {
   const content = blockWithdrawalsQuery.data?.items ? (
@@ -25,7 +24,7 @@ const BlockWithdrawals = ({ blockWithdrawalsQuery }: Props) => {
         <BeaconChainWithdrawalsTable
           items={ blockWithdrawalsQuery.data.items }
           isLoading={ blockWithdrawalsQuery.isPlaceholderData }
-          top={ blockWithdrawalsQuery.pagination.isVisible ? TABS_HEIGHT : 0 }
+          top={ blockWithdrawalsQuery.pagination.isVisible ? 80 : 0 }
           view="block"
         />
       </Hide>

@@ -1,15 +1,19 @@
 import { Box } from '@chakra-ui/react';
+import { test, expect } from '@playwright/experimental-ct-react';
 import React from 'react';
 
-import { test, expect } from 'playwright/lib';
+import TestApp from 'playwright/TestApp';
 
 import RadioButtonGroupTest from './specs/RadioButtonGroupTest';
 
-test('radio button group', async({ render }) => {
-  const component = await render(
-    <Box w="400px" p="10px">
-      <RadioButtonGroupTest/>
-    </Box>,
+test('radio button group', async({ mount }) => {
+  const component = await mount(
+    <TestApp>
+      <Box w="400px" p="10px">
+        <RadioButtonGroupTest/>
+      </Box>
+    </TestApp>,
   );
+
   await expect(component).toHaveScreenshot();
 });

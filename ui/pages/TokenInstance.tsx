@@ -11,7 +11,6 @@ import throwOnResourceLoadError from 'lib/errors/throwOnResourceLoadError';
 import useIsMobile from 'lib/hooks/useIsMobile';
 import * as metadata from 'lib/metadata';
 import * as regexp from 'lib/regexp';
-import { getTokenTypeName } from 'lib/token/tokenTypes';
 import {
   TOKEN_INSTANCE,
   TOKEN_INFO_ERC_1155,
@@ -24,11 +23,12 @@ import TextAd from 'ui/shared/ad/TextAd';
 import AddressAddToWallet from 'ui/shared/address/AddressAddToWallet';
 import Tag from 'ui/shared/chakra/Tag';
 import TokenEntity from 'ui/shared/entities/token/TokenEntity';
-import LinkExternal from 'ui/shared/links/LinkExternal';
+import LinkExternal from 'ui/shared/LinkExternal';
 import PageTitle from 'ui/shared/Page/PageTitle';
 import Pagination from 'ui/shared/pagination/Pagination';
 import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
 import RoutedTabs from 'ui/shared/Tabs/RoutedTabs';
+import TabsSkeleton from 'ui/shared/Tabs/TabsSkeleton';
 import TokenHolders from 'ui/token/TokenHolders/TokenHolders';
 import TokenTransfer from 'ui/token/TokenTransfer/TokenTransfer';
 import TokenInstanceDetails from 'ui/tokenInstance/TokenInstanceDetails';
@@ -68,7 +68,7 @@ const TokenInstanceContent = () => {
     pathParams: { hash, id },
     scrollRef,
     options: {
-      enabled: Boolean(hash && id && (!tab || tab === 'token_transfers')),
+      enabled: Boolean(hash && id && (!tab || tab === 'token_transfers') && !tokenInstanceQuery.isPlaceholderData && tokenInstanceQuery.data),
       placeholderData: getTokenInstanceTransfersStub(tokenQuery.data?.type, null),
     },
   });
@@ -88,8 +88,6 @@ const TokenInstanceContent = () => {
       placeholderData: getTokenInstanceHoldersStub(tokenQuery.data?.type, null),
     },
   });
-
-  const isLoading = tokenInstanceQuery.isPlaceholderData || tokenQuery.isPlaceholderData;
 
   React.useEffect(() => {
     if (tokenInstanceQuery.data && !tokenInstanceQuery.isPlaceholderData && tokenQuery.data && !tokenQuery.isPlaceholderData) {
@@ -117,30 +115,32 @@ const TokenInstanceContent = () => {
     {
       id: 'token_transfers',
       title: 'Token transfers',
-      component: <TokenTransfer transfersQuery={ transfersQuery } tokenId={ id } token={ tokenQuery.data } shouldRender={ !isLoading }/>,
+      component: <TokenTransfer transfersQuery={ transfersQuery } tokenId={ id } token={ tokenQuery.data }/>,
     },
     shouldFetchHolders ?
-      { id: 'holders', title: 'Holders', component: <TokenHolders holdersQuery={ holdersQuery } token={ tokenQuery.data } shouldRender={ !isLoading }/> } :
+      { id: 'holders', title: 'Holders', component: <TokenHolders holdersQuery={ holdersQuery } token={ tokenQuery.data }/> } :
       undefined,
     { id: 'metadata', title: 'Metadata', component: (
       <TokenInstanceMetadata
         data={ tokenInstanceQuery.data?.metadata }
-        isPlaceholderData={ isLoading }
+        isPlaceholderData={ tokenInstanceQuery.isPlaceholderData }
       />
     ) },
   ].filter(Boolean);
 
   throwOnResourceLoadError(tokenInstanceQuery);
 
-  const tokenTag = tokenQuery.data?.type ? <Tag isLoading={ tokenInstanceQuery.isPlaceholderData }>{ getTokenTypeName(tokenQuery.data?.type) }</Tag> : null;
+  const tokenTag = <Tag isLoading={ tokenInstanceQuery.isPlaceholderData }>{ tokenQuery.data?.type }</Tag>;
 
   const address = {
     hash: hash || '',
     is_contract: true,
-    implementations: null,
+    implementation_name: null,
     watchlist_names: [],
     watchlist_address_id: null,
   };
+
+  const isLoading = tokenInstanceQuery.isPlaceholderData || tokenQuery.isPlaceholderData;
 
   const appLink = (() => {
     if (!tokenInstanceQuery.data?.external_app_url) {
@@ -225,13 +225,14 @@ const TokenInstanceContent = () => {
       { /* should stay before tabs to scroll up with pagination */ }
       <Box ref={ scrollRef }></Box>
 
-      <RoutedTabs
-        tabs={ tabs }
-        tabListProps={ isMobile ? { mt: 8 } : { mt: 3, py: 5, marginBottom: 0 } }
-        isLoading={ isLoading }
-        rightSlot={ !isMobile && pagination?.isVisible ? <Pagination { ...pagination }/> : null }
-        stickyEnabled={ !isMobile }
-      />
+      { isLoading ? <TabsSkeleton tabs={ tabs }/> : (
+        <RoutedTabs
+          tabs={ tabs }
+          tabListProps={ isMobile ? { mt: 8 } : { mt: 3, py: 5, marginBottom: 0 } }
+          rightSlot={ !isMobile && pagination?.isVisible ? <Pagination { ...pagination }/> : null }
+          stickyEnabled={ !isMobile }
+        />
+      ) }
     </>
   );
 };

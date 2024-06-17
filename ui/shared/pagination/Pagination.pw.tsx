@@ -1,14 +1,15 @@
+import { test, expect } from '@playwright/experimental-ct-react';
 import React from 'react';
 
 import type { PaginationParams } from './types';
 
-import { test, expect } from 'playwright/lib';
+import TestApp from 'playwright/TestApp';
 
 import Pagination from './Pagination';
 
 test.use({ viewport: { width: 250, height: 50 } });
 
-test('default view', async({ render }) => {
+test('default view', async({ mount }) => {
   const props: PaginationParams = {
     page: 2,
     isVisible: true,
@@ -20,6 +21,11 @@ test('default view', async({ render }) => {
     onPrevPageClick: () => {},
     resetPage: () => {},
   };
-  const component = await render(<Pagination { ...props } w="fit-content"/>);
+  const component = await mount(
+    <TestApp>
+      <Pagination { ...props } w="fit-content"/>
+    </TestApp>,
+  );
+
   await expect(component).toHaveScreenshot();
 });

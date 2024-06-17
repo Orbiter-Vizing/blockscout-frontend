@@ -1,12 +1,13 @@
+import { test, expect } from '@playwright/experimental-ct-react';
 import React from 'react';
 
 import type { TabItem } from './types';
 
-import { test, expect } from 'playwright/lib';
+import TestApp from 'playwright/TestApp';
 
 import TabsWithScroll from './TabsWithScroll';
 
-test('with counters', async({ render }) => {
+test('with counters', async({ mount }) => {
   const tabs: Array<TabItem> = [
     {
       id: 'tab1',
@@ -27,7 +28,13 @@ test('with counters', async({ render }) => {
       component: null,
     },
   ];
-  const component = await render(<TabsWithScroll tabs={ tabs }/>);
+  const component = await mount(
+    <TestApp>
+      <TabsWithScroll tabs={ tabs }/>
+    </TestApp>,
+  );
+
   await component.getByText('Third tab').hover();
+
   await expect(component).toHaveScreenshot();
 });

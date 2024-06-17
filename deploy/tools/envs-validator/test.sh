@@ -9,7 +9,7 @@ export NEXT_PUBLIC_GIT_TAG=$(git describe --tags --abbrev=0)
 ../../scripts/collect_envs.sh ../../../docs/ENVS.md
 
 # Copy test assets
-mkdir -p "./public/assets/configs"
+mkdir -p "./public/assets"
 cp -r ${test_folder}/assets ./public/
 
 # Build validator script

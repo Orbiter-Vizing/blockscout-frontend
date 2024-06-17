@@ -20,8 +20,7 @@ const TokenInfoFieldProjectName = ({ control, isReadOnly }: Props) => {
         <Input
           { ...field }
           isInvalid={ Boolean(fieldState.error) }
-          isDisabled={ formState.isSubmitting }
-          isReadOnly={ isReadOnly }
+          isDisabled={ formState.isSubmitting || isReadOnly }
           autoComplete="off"
         />
         <InputPlaceholder text="Project name" error={ fieldState.error }/>

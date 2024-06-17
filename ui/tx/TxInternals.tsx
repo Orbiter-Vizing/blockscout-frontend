@@ -3,11 +3,10 @@ import React from 'react';
 
 import type { InternalTransaction } from 'types/api/internalTransaction';
 
-import compareBns from 'lib/bigint/compareBns';
 // import { apos } from 'lib/html-entities';
 import { INTERNAL_TX } from 'stubs/internalTx';
 import { generateListStub } from 'stubs/utils';
-import ActionBar, { ACTION_BAR_HEIGHT_DESKTOP } from 'ui/shared/ActionBar';
+import ActionBar from 'ui/shared/ActionBar';
 import DataListDisplay from 'ui/shared/DataListDisplay';
 // import FilterInput from 'ui/shared/filters/FilterInput';
 // import TxInternalsFilter from 'ui/tx/internals/TxInternalsFilter';
@@ -32,20 +31,23 @@ const getNextSortValue = (getNextSortValueShared<SortField, Sort>).bind(undefine
 const sortFn = (sort: Sort | undefined) => (a: InternalTransaction, b: InternalTransaction) => {
   switch (sort) {
     case 'value-desc': {
-      return compareBns(b.value, a.value);
+      const result = a.value > b.value ? -1 : 1;
+      return a.value === b.value ? 0 : result;
     }
 
     case 'value-asc': {
-      return compareBns(a.value, b.value);
+      const result = a.value > b.value ? 1 : -1;
+      return a.value === b.value ? 0 : result;
     }
 
     case 'gas-limit-desc': {
-      return compareBns(b.gas_limit, a.gas_limit);
+      const result = a.gas_limit > b.gas_limit ? -1 : 1;
+      return a.gas_limit === b.gas_limit ? 0 : result;
     }
 
     case 'gas-limit-asc': {
-      return compareBns(a.gas_limit, b.gas_limit);
-
+      const result = a.gas_limit > b.gas_limit ? 1 : -1;
+      return a.gas_limit === b.gas_limit ? 0 : result;
     }
 
     default:
@@ -109,7 +111,7 @@ const TxInternals = ({ txQuery }: Props) => {
           data={ filteredData }
           sort={ sort }
           onSortToggle={ handleSortToggle }
-          top={ pagination.isVisible ? ACTION_BAR_HEIGHT_DESKTOP : 0 }
+          top={ pagination.isVisible ? 80 : 0 }
           isLoading={ isPlaceholderData }
         />
       </Hide>

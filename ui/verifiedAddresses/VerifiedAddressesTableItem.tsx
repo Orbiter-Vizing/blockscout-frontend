@@ -68,7 +68,7 @@ const VerifiedAddressesTableItem = ({ item, application, onAdd, onEdit, isLoadin
     <Tr>
       <Td>
         <AddressEntity
-          address={{ hash: item.contractAddress, is_contract: true }}
+          address={{ hash: item.contractAddress, is_contract: true, implementation_name: null }}
           isLoading={ isLoading }
           fontWeight="600"
         />

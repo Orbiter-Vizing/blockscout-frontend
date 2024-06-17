@@ -11,7 +11,6 @@ import highlightText from 'lib/highlightText';
 import * as mixpanel from 'lib/mixpanel/index';
 import { saveToRecentKeywords } from 'lib/recentSearchKeywords';
 import { ADDRESS_REGEXP } from 'lib/validations/address';
-import ContractCertifiedLabel from 'ui/shared/ContractCertifiedLabel';
 import * as AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import * as BlobEntity from 'ui/shared/entities/blob/BlobEntity';
 import * as BlockEntity from 'ui/shared/entities/block/BlockEntity';
@@ -21,11 +20,10 @@ import * as TxEntity from 'ui/shared/entities/tx/TxEntity';
 import * as UserOpEntity from 'ui/shared/entities/userOp/UserOpEntity';
 import HashStringShortenDynamic from 'ui/shared/HashStringShortenDynamic';
 import IconSvg from 'ui/shared/IconSvg';
-import LinkExternal from 'ui/shared/links/LinkExternal';
-import LinkInternal from 'ui/shared/links/LinkInternal';
+import LinkExternal from 'ui/shared/LinkExternal';
+import LinkInternal from 'ui/shared/LinkInternal';
 import type { SearchResultAppItem } from 'ui/shared/search/utils';
 import { getItemCategory, searchItemTitles } from 'ui/shared/search/utils';
-
 interface Props {
   data: SearchResultItem | SearchResultAppItem;
   searchTerm: string;
@@ -71,7 +69,7 @@ const SearchResultTableItem = ({ data, searchTerm, isLoading }: Props) => {
                     dangerouslySetInnerHTML={{ __html: highlightText(name, searchTerm) }}
                   />
                 </LinkInternal>
-                { data.is_verified_via_admin_panel && <IconSvg name="certified" boxSize={ 4 } ml={ 1 } color="green.500"/> }
+                { data.is_verified_via_admin_panel && <IconSvg name="verified_token" boxSize={ 4 } ml={ 1 } color="green.500"/> }
               </Flex>
             </Td>
             <Td fontSize="sm" verticalAlign="middle">
@@ -103,7 +101,7 @@ const SearchResultTableItem = ({ data, searchTerm, isLoading }: Props) => {
           is_contract: data.type === 'contract',
           is_verified: data.is_smart_contract_verified,
           name: null,
-          implementations: null,
+          implementation_name: null,
           ens_domain_name: null,
         };
         const expiresText = data.ens_info?.expiry_date ? ` (expires ${ dayjs(data.ens_info.expiry_date).fromNow() })` : '';
@@ -130,24 +128,14 @@ const SearchResultTableItem = ({ data, searchTerm, isLoading }: Props) => {
             </Td>
             { addressName && (
               <Td colSpan={ 2 } fontSize="sm" verticalAlign="middle">
-                <Flex alignItems="center">
-                  <Text
-                    overflow="hidden"
-                    whiteSpace="nowrap"
-                    textOverflow="ellipsis"
-                  >
-                    <span dangerouslySetInnerHTML={{ __html: shouldHighlightHash ? xss(addressName) : highlightText(addressName, searchTerm) }}/>
-                    { data.ens_info && (
-                      data.ens_info.names_count > 1 ? (
-                        <chakra.span color="text_secondary">
-                          { data.ens_info.names_count > 39 ? '40+' : `+${ data.ens_info.names_count - 1 }` }
-                        </chakra.span>
-                      ) :
-                        <chakra.span color="text_secondary">{ expiresText }</chakra.span>
-                    ) }
-                  </Text>
-                  { data.certified && <ContractCertifiedLabel iconSize={ 5 } boxSize={ 5 } mx={ 1 }/> }
-                </Flex>
+                <span dangerouslySetInnerHTML={{ __html: shouldHighlightHash ? xss(addressName) : highlightText(addressName, searchTerm) }}/>
+                { data.ens_info &&
+                  (
+                    data.ens_info.names_count > 1 ?
+                      <chakra.span color="text_secondary"> ({ data.ens_info.names_count > 39 ? '40+' : `+${ data.ens_info.names_count - 1 }` })</chakra.span> :
+                      <chakra.span color="text_secondary">{ expiresText }</chakra.span>
+                  )
+                }
               </Td>
             ) }
           </>

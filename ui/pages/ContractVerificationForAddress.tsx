@@ -86,7 +86,7 @@ const ContractVerificationForAddress = () => {
         backLink={ backLink }
       />
       <AddressEntity
-        address={{ hash, is_contract: true }}
+        address={{ hash, is_contract: true, implementation_name: null }}
         noLink
         fontFamily="heading"
         fontSize="lg"

@@ -14,13 +14,14 @@ import SolidityscanReportScore from 'ui/shared/solidityscanReport/SolidityscanRe
 type Props = {
   id: string;
   securityReport?: MarketplaceAppSecurityReport;
+  height?: string | undefined;
   showContractList: () => void;
   isLoading?: boolean;
   onlyIcon?: boolean;
   source: 'Security view' | 'App modal' | 'App page';
 }
 
-const AppSecurityReport = ({ id, securityReport, showContractList, isLoading, onlyIcon, source }: Props) => {
+const AppSecurityReport = ({ id, securityReport, height, showContractList, isLoading, onlyIcon, source }: Props) => {
   const { isOpen, onToggle, onClose } = useDisclosure();
 
   const handleButtonClick = React.useCallback(() => {
@@ -51,6 +52,7 @@ const AppSecurityReport = ({ id, securityReport, showContractList, isLoading, on
           score={ securityScore }
           isLoading={ isLoading }
           onClick={ handleButtonClick }
+          height={ height }
           onlyIcon={ onlyIcon }
           label="The security score is based on analysis of a DApp's smart contracts."
         />

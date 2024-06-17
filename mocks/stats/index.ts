@@ -1,12 +1,9 @@
 import _mapValues from 'lodash/mapValues';
 
-import type { HomeStats } from 'types/api/stats';
-
-export const base: HomeStats = {
+export const base = {
   average_block_time: 6212.0,
   coin_price: '0.00199678',
   coin_price_change_percentage: -7.42,
-  coin_image: 'http://localhost:3100/utia.jpg',
   gas_prices: {
     average: {
       fiat_price: '1.39',
@@ -44,42 +41,35 @@ export const base: HomeStats = {
   tvl: '1767425.102766552',
 };
 
-export const withBtcLocked: HomeStats = {
+export const withBtcLocked = {
   ...base,
   rootstock_locked_btc: '3337493406696977561374',
 };
 
-export const withoutFiatPrices: HomeStats = {
+export const withoutFiatPrices = {
   ...base,
   gas_prices: _mapValues(base.gas_prices, (price) => price ? ({ ...price, fiat_price: null }) : null),
 };
 
-export const withoutGweiPrices: HomeStats = {
+export const withoutGweiPrices = {
   ...base,
   gas_prices: _mapValues(base.gas_prices, (price) => price ? ({ ...price, price: null }) : null),
 };
 
-export const withoutBothPrices: HomeStats = {
+export const withoutBothPrices = {
   ...base,
   gas_prices: _mapValues(base.gas_prices, (price) => price ? ({ ...price, price: null, fiat_price: null }) : null),
 };
 
-export const withSecondaryCoin: HomeStats = {
+export const withSecondaryCoin = {
   ...base,
   secondary_coin_price: '3.398',
 };
 
-export const noChartData: HomeStats = {
+export const noChartData = {
   ...base,
   transactions_today: null,
   coin_price: null,
   market_cap: null,
   tvl: null,
-};
-
-export const indexingStatus = {
-  finished_indexing_blocks: false,
-  indexed_blocks_ratio: '0.1',
-  finished_indexing: true,
-  indexed_internal_transactions_ratio: '1',
 };

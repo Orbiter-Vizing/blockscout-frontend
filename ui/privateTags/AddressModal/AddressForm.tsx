@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { useMutation } from '@tanstack/react-query';
 import React, { useCallback, useState } from 'react';
@@ -40,6 +41,8 @@ const AddressForm: React.FC<Props> = ({ data, onClose, onSuccess, setAlertVisibl
       tag: data?.name || '',
     },
   });
+
+  const formBackgroundColor = useColorModeValue('white', 'gray.900');
 
   const { mutate } = useMutation({
     mutationFn: (formData: Inputs) => {
@@ -84,12 +87,12 @@ const AddressForm: React.FC<Props> = ({ data, onClose, onSuccess, setAlertVisibl
   };
 
   const renderAddressInput = useCallback(({ field }: {field: ControllerRenderProps<Inputs, 'address'>}) => {
-    return <AddressInput<Inputs, 'address'> field={ field } error={ errors.address } bgColor="dialog_bg"/>;
-  }, [ errors ]);
+    return <AddressInput<Inputs, 'address'> field={ field } error={ errors.address } backgroundColor={ formBackgroundColor }/>;
+  }, [ errors, formBackgroundColor ]);
 
   const renderTagInput = useCallback(({ field }: {field: ControllerRenderProps<Inputs, 'tag'>}) => {
-    return <TagInput<Inputs, 'tag'> field={ field } error={ errors.tag } bgColor="dialog_bg"/>;
-  }, [ errors ]);
+    return <TagInput<Inputs, 'tag'> field={ field } error={ errors.tag } backgroundColor={ formBackgroundColor }/>;
+  }, [ errors, formBackgroundColor ]);
 
   return (
     <form noValidate onSubmit={ handleSubmit(onSubmit) }>

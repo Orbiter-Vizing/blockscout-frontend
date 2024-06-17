@@ -1,34 +1,37 @@
 import { Box } from '@chakra-ui/react';
+import { test, expect } from '@playwright/experimental-ct-react';
 import React from 'react';
 
 import * as tokenTransferMock from 'mocks/tokens/tokenTransfer';
-import { test, expect } from 'playwright/lib';
+import TestApp from 'playwright/TestApp';
 
 import TokenTransferTable from './TokenTransferTable';
 
-test('without tx info', async({ render }) => {
-  const component = await render(
-    <Box pt={{ base: '134px', lg: 6 }}>
+test('without tx info', async({ mount }) => {
+  const component = await mount(
+    <TestApp>
+      <Box h={{ base: '134px', lg: 6 }}/>
       <TokenTransferTable
         data={ tokenTransferMock.mixTokens.items }
         top={ 0 }
         showTxInfo={ false }
       />
-    </Box>,
+    </TestApp>,
   );
 
   await expect(component).toHaveScreenshot();
 });
 
-test('with tx info', async({ render }) => {
-  const component = await render(
-    <Box pt={{ base: '134px', lg: 6 }}>
+test('with tx info', async({ mount }) => {
+  const component = await mount(
+    <TestApp>
+      <Box h={{ base: '134px', lg: 6 }}/>
       <TokenTransferTable
         data={ tokenTransferMock.mixTokens.items }
         top={ 0 }
         showTxInfo={ true }
       />
-    </Box>,
+    </TestApp>,
   );
 
   await expect(component).toHaveScreenshot();

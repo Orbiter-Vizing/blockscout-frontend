@@ -1,4 +1,4 @@
-import { Alert, Button, chakra, Flex } from '@chakra-ui/react';
+import { Button, chakra, Flex } from '@chakra-ui/react';
 import React from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -11,9 +11,9 @@ import type { ResourceName } from 'lib/api/resources';
 import dayjs from 'lib/date/dayjs';
 import downloadBlob from 'lib/downloadBlob';
 import useToast from 'lib/hooks/useToast';
-import FormFieldReCaptcha from 'ui/shared/forms/fields/FormFieldReCaptcha';
 
 import CsvExportFormField from './CsvExportFormField';
+import CsvExportFormReCaptcha from './CsvExportFormReCaptcha';
 
 interface Props {
   hash: string;
@@ -21,10 +21,9 @@ interface Props {
   filterType?: CsvExportParams['filterType'] | null;
   filterValue?: CsvExportParams['filterValue'] | null;
   fileNameTemplate: string;
-  exportType: CsvExportParams['type'] | undefined;
 }
 
-const CsvExportForm = ({ hash, resource, filterType, filterValue, fileNameTemplate, exportType }: Props) => {
+const CsvExportForm = ({ hash, resource, filterType, filterValue, fileNameTemplate }: Props) => {
   const formApi = useForm<FormFields>({
     mode: 'onBlur',
     defaultValues: {
@@ -37,10 +36,10 @@ const CsvExportForm = ({ hash, resource, filterType, filterValue, fileNameTempla
 
   const onFormSubmit: SubmitHandler<FormFields> = React.useCallback(async(data) => {
     try {
-      const url = buildUrl(resource, { hash } as never, {
+      const url = buildUrl(resource, undefined, {
         address_id: hash,
-        from_period: exportType !== 'holders' ? data.from : null,
-        to_period: exportType !== 'holders' ? data.to : null,
+        from_period: data.from,
+        to_period: data.to,
         filter_type: filterType,
         filter_value: filterValue,
         recaptcha_response: data.reCaptcha,
@@ -57,11 +56,11 @@ const CsvExportForm = ({ hash, resource, filterType, filterValue, fileNameTempla
       }
 
       const blob = await response.blob();
-      const fileName = exportType === 'holders' ?
-        `${ fileNameTemplate }_${ hash }.csv` :
-        // eslint-disable-next-line max-len
-        `${ fileNameTemplate }_${ hash }_${ data.from }_${ data.to }${ filterType && filterValue ? '_with_filter_type_' + filterType + '_value_' + filterValue : '' }.csv`;
-      downloadBlob(blob, fileName);
+      downloadBlob(
+        blob,
+        `${ fileNameTemplate }_${ hash }_${ data.from }_${ data.to }
+        ${ filterType && filterValue ? '_with_filter_type_' + filterType + '_value_' + filterValue : '' }.csv`,
+      );
 
     } catch (error) {
       toast({
@@ -74,14 +73,7 @@ const CsvExportForm = ({ hash, resource, filterType, filterValue, fileNameTempla
       });
     }
 
-  }, [ resource, hash, exportType, filterType, filterValue, fileNameTemplate, toast ]);
-
-  const disabledFeatureMessage = (
-    <Alert status="error">
-      CSV export is not available at the moment since reCaptcha is not configured for this application.
-      Please contact the service maintainer to make necessary changes in the service configuration.
-    </Alert>
-  );
+  }, [ fileNameTemplate, hash, resource, filterType, filterValue, toast ]);
 
   return (
     <FormProvider { ...formApi }>
@@ -90,9 +82,9 @@ const CsvExportForm = ({ hash, resource, filterType, filterValue, fileNameTempla
         onSubmit={ handleSubmit(onFormSubmit) }
       >
         <Flex columnGap={ 5 } rowGap={ 3 } flexDir={{ base: 'column', lg: 'row' }} alignItems={{ base: 'flex-start', lg: 'center' }} flexWrap="wrap">
-          { exportType !== 'holders' && <CsvExportFormField name="from" formApi={ formApi }/> }
-          { exportType !== 'holders' && <CsvExportFormField name="to" formApi={ formApi }/> }
-          <FormFieldReCaptcha disabledFeatureMessage={ disabledFeatureMessage }/>
+          <CsvExportFormField name="from" formApi={ formApi }/>
+          <CsvExportFormField name="to" formApi={ formApi }/>
+          <CsvExportFormReCaptcha formApi={ formApi }/>
         </Flex>
         <Button
           variant="solid"

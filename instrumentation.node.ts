@@ -46,7 +46,9 @@ const sdk = new NodeSDK({
               url.pathname.startsWith('/_next/static/') ||
               url.pathname.startsWith('/_next/data/') ||
               url.pathname.startsWith('/assets/') ||
-              url.pathname.startsWith('/static/')
+              url.pathname.startsWith('/static/') ||
+              url.pathname.startsWith('/favicon/') ||
+              url.pathname.startsWith('/envs.js')
             ) {
               return true;
             }

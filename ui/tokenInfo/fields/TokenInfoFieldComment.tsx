@@ -19,8 +19,7 @@ const TokenInfoFieldComment = ({ control, isReadOnly }: Props) => {
         <Textarea
           { ...field }
           isInvalid={ Boolean(fieldState.error) }
-          isDisabled={ formState.isSubmitting }
-          isReadOnly={ isReadOnly }
+          isDisabled={ formState.isSubmitting || isReadOnly }
           autoComplete="off"
           maxH="160px"
           maxLength={ 300 }

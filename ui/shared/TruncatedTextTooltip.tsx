@@ -1,4 +1,3 @@
-import type { PlacementWithLogical } from '@chakra-ui/react';
 import { Tooltip } from '@chakra-ui/react';
 import debounce from 'lodash/debounce';
 import React from 'react';
@@ -9,10 +8,9 @@ import { BODY_TYPEFACE } from 'theme/foundations/typography';
 interface Props {
   children: React.ReactNode;
   label: string;
-  placement?: PlacementWithLogical;
 }
 
-const TruncatedTextTooltip = ({ children, label, placement }: Props) => {
+const TruncatedTextTooltip = ({ children, label }: Props) => {
   const childRef = React.useRef<HTMLElement>(null);
   const [ isTruncated, setTruncated ] = React.useState(false);
 
@@ -62,7 +60,7 @@ const TruncatedTextTooltip = ({ children, label, placement }: Props) => {
   );
 
   if (isTruncated) {
-    return <Tooltip label={ label } maxW={{ base: '100vw', lg: '400px' }} placement={ placement }>{ modifiedChildren }</Tooltip>;
+    return <Tooltip label={ label } maxW={{ base: '100vw', lg: '400px' }}>{ modifiedChildren }</Tooltip>;
   }
 
   return modifiedChildren;

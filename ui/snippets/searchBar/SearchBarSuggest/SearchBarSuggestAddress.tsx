@@ -6,7 +6,6 @@ import type { SearchResultAddressOrContract } from 'types/api/search';
 import dayjs from 'lib/date/dayjs';
 import highlightText from 'lib/highlightText';
 import { ADDRESS_REGEXP } from 'lib/validations/address';
-import ContractCertifiedLabel from 'ui/shared/ContractCertifiedLabel';
 import * as AddressEntity from 'ui/shared/entities/address/AddressEntity';
 import HashStringShortenDynamic from 'ui/shared/HashStringShortenDynamic';
 
@@ -26,6 +25,7 @@ const SearchBarSuggestAddress = ({ data, isMobile, searchTerm }: Props) => {
         is_contract: data.type === 'contract',
         name: '',
         is_verified: data.is_smart_contract_verified,
+        implementation_name: null,
         ens_domain_name: null,
       }}
     />
@@ -34,22 +34,21 @@ const SearchBarSuggestAddress = ({ data, isMobile, searchTerm }: Props) => {
   const expiresText = data.ens_info?.expiry_date ? ` (expires ${ dayjs(data.ens_info.expiry_date).fromNow() })` : '';
 
   const nameEl = addressName && (
-    <Flex alignItems="center">
-      <Text
-        variant="secondary"
-        overflow="hidden"
-        whiteSpace="nowrap"
-        textOverflow="ellipsis"
-      >
-        <chakra.span fontWeight={ 500 } dangerouslySetInnerHTML={{ __html: highlightText(addressName, searchTerm) }}/>
-        { data.ens_info && (
+    <Text
+      variant="secondary"
+      overflow="hidden"
+      whiteSpace="nowrap"
+      textOverflow="ellipsis"
+    >
+      <chakra.span fontWeight={ 500 } dangerouslySetInnerHTML={{ __html: highlightText(addressName, searchTerm) }}/>
+      { data.ens_info &&
+        (
           data.ens_info.names_count > 1 ?
             <span> ({ data.ens_info.names_count > 39 ? '40+' : `+${ data.ens_info.names_count - 1 }` })</span> :
             <span>{ expiresText }</span>
-        ) }
-      </Text>
-      { data.certified && <ContractCertifiedLabel boxSize={ 5 } iconSize={ 5 } ml={ 1 }/> }
-    </Flex>
+        )
+      }
+    </Text>
   );
   const addressEl = <HashStringShortenDynamic hash={ data.address } isTooltipDisabled/>;
 

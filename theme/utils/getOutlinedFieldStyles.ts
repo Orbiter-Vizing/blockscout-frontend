@@ -1,64 +1,59 @@
 import type { StyleFunctionProps } from '@chakra-ui/theme-tools';
-import { mode } from '@chakra-ui/theme-tools';
+import { mode, getColor } from '@chakra-ui/theme-tools';
 
+import getDefaultFormColors from './getDefaultFormColors';
 import getDefaultTransitionProps from './getDefaultTransitionProps';
-import getFormStyles from './getFormStyles';
 
 export default function getOutlinedFieldStyles(props: StyleFunctionProps) {
-  const formStyles = getFormStyles(props);
+  const { theme, borderColor } = props;
+  const { focusBorderColor, errorColor } = getDefaultFormColors(props);
   const transitionProps = getDefaultTransitionProps();
 
   return {
     border: '2px solid',
     // filled input
-    ...formStyles.input.filled,
+    backgroundColor: 'transparent',
+    borderColor: mode('gray.300', 'gray.600')(props),
     ...transitionProps,
     _hover: {
-      ...formStyles.input.hover,
+      borderColor: mode('gray.200', 'gray.500')(props),
     },
     _readOnly: {
       boxShadow: 'none !important',
       userSelect: 'all',
-      pointerEvents: 'none',
-      ...formStyles.input.readOnly,
-      _hover: {
-        ...formStyles.input.readOnly,
-      },
-      _focus: {
-        ...formStyles.input.readOnly,
-      },
     },
     _disabled: {
-      ...formStyles.input.disabled,
+      opacity: 1,
+      backgroundColor: mode('blackAlpha.200', 'whiteAlpha.200')(props),
+      borderColor: 'transparent',
       cursor: 'not-allowed',
+      _hover: {
+        borderColor: 'transparent',
+      },
       ':-webkit-autofill': {
         // background color for disabled input which value was selected from browser autocomplete popup
         '-webkit-box-shadow': `0 0 0px 1000px ${ mode('rgba(16, 17, 18, 0.08)', 'rgba(255, 255, 255, 0.08)')(props) } inset`,
       },
     },
     _invalid: {
-      ...formStyles.input.error,
+      borderColor: getColor(theme, errorColor),
       boxShadow: `none`,
-      _placeholder: {
-        color: formStyles.placeholder.error.color,
-      },
     },
     _focusVisible: {
-      ...formStyles.input.focus,
       zIndex: 1,
+      borderColor: getColor(theme, focusBorderColor),
       boxShadow: 'md',
     },
     _placeholder: {
-      color: formStyles.placeholder.default.color,
+      color: mode('blackAlpha.600', 'whiteAlpha.600')(props),
     },
     // not filled input
-    ':placeholder-shown:not(:focus-visible):not(:hover):not([aria-invalid=true]):not([aria-readonly=true])': {
-      ...formStyles.input.empty,
-    },
+    ':placeholder-shown:not(:focus-visible):not(:hover):not([aria-invalid=true])': { borderColor: borderColor || mode('gray.100', 'gray.700')(props) },
 
     // not filled input with type="date"
-    ':not(:placeholder-shown)[value=""]:not(:focus-visible):not(:hover):not([aria-invalid=true]):not([aria-readonly=true])': {
-      ...formStyles.input.empty,
+    ':not(:placeholder-shown)[value=""]:not(:focus-visible):not(:hover):not([aria-invalid=true])': {
+      borderColor: borderColor || mode('gray.100', 'gray.700')(props),
+      color: 'gray.500',
     },
 
     ':-webkit-autofill': { transition: 'background-color 5000s ease-in-out 0s' },

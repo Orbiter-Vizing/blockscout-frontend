@@ -38,12 +38,6 @@ const NavigationDesktop = () => {
     cookies.set(cookies.NAMES.NAV_BAR_COLLAPSED, isCollapsed ? 'false' : 'true');
   }, [ isCollapsed ]);
 
-  const handleContainerClick = React.useCallback((event: React.MouseEvent) => {
-    if (event.target === event.currentTarget) {
-      handleTogglerClick();
-    }
-  }, [ handleTogglerClick ]);
-
   const chevronIconStyles = {
     bgColor: useColorModeValue('white', 'black'),
     color: useColorModeValue('blackAlpha.400', 'whiteAlpha.400'),
@@ -69,7 +63,6 @@ const NavigationDesktop = () => {
           display: 'block',
         },
       }}
-      onClick={ handleContainerClick }
     >
       { config.chain.isTestnet && <IconSvg name="testnet" h="14px" w="49px" color="red.400" position="absolute" pl={ 3 } top="34px"/> }
       <Box
@@ -89,7 +82,7 @@ const NavigationDesktop = () => {
         <NetworkLogo isCollapsed={ isCollapsed }/>
         { Boolean(config.UI.sidebar.featuredNetworks) && <NetworkMenu isCollapsed={ isCollapsed }/> }
       </Box>
-      <Box as="nav" mt={ 6 } w="100%">
+      <Box as="nav" mt={ 8 } w="100%">
         <VStack as="ul" spacing="1" alignItems="flex-start">
           { mainNavItems.map((item) => {
             if (isGroupItem(item)) {
@@ -101,7 +94,7 @@ const NavigationDesktop = () => {
         </VStack>
       </Box>
       { hasAccount && (
-        <Box as="nav" borderTopWidth="1px" borderColor="divider" w="100%" mt={ 3 } pt={ 3 }>
+        <Box as="nav" borderTopWidth="1px" borderColor="divider" w="100%" mt={ 6 } pt={ 6 }>
           <VStack as="ul" spacing="1" alignItems="flex-start">
             { accountNavItems.map((item) => <NavLink key={ item.text } item={ item } isCollapsed={ isCollapsed }/>) }
           </VStack>

@@ -1,29 +1,16 @@
-import {
-  Flex,
-  Button,
-  chakra,
-  Popover,
-  PopoverTrigger,
-  PopoverBody,
-  PopoverContent,
-  Image,
-  Skeleton,
-  useDisclosure,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Flex, Button, chakra, Popover, PopoverTrigger, PopoverBody, PopoverContent, useDisclosure, Image, useColorModeValue } from '@chakra-ui/react';
 import React from 'react';
 
 import config from 'configs/app';
 import IconSvg from 'ui/shared/IconSvg';
-import LinkExternal from 'ui/shared/links/LinkExternal';
+import LinkExternal from 'ui/shared/LinkExternal';
 
 interface Props {
   className?: string;
   hash: string;
-  isLoading?: string;
 }
 
-const ContractCodeIde = ({ className, hash, isLoading }: Props) => {
+const ContractCodeIde = ({ className, hash }: Props) => {
   const { isOpen, onToggle, onClose } = useDisclosure();
   const defaultIconColor = useColorModeValue('gray.600', 'gray.500');
 
@@ -43,10 +30,6 @@ const ContractCodeIde = ({ className, hash, isLoading }: Props) => {
         );
       });
   }, [ defaultIconColor, hash ]);
-
-  if (isLoading) {
-    return <Skeleton h={ 8 } w="92px" borderRadius="base"/>;
-  }
 
   if (ideLinks.length === 0) {
     return null;

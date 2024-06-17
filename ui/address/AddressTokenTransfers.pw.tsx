@@ -1,110 +1,126 @@
 import { Box } from '@chakra-ui/react';
+import { test as base, expect, devices } from '@playwright/experimental-ct-react';
 import React from 'react';
 
 import * as tokenTransferMock from 'mocks/tokens/tokenTransfer';
 import * as socketServer from 'playwright/fixtures/socketServer';
-import { test, expect, devices } from 'playwright/lib';
+import TestApp from 'playwright/TestApp';
+import buildApiUrl from 'playwright/utils/buildApiUrl';
 
 import AddressTokenTransfers from './AddressTokenTransfers';
 
 const CURRENT_ADDRESS = '0xd789a607CEac2f0E14867de4EB15b15C9FFB5859';
-const TOKEN_HASH = '0x1189a607CEac2f0E14867de4EB15b15C9FFB5859';
+
+const API_URL = buildApiUrl('address_token_transfers', { hash: CURRENT_ADDRESS }) +
+ '?token=0x1189a607CEac2f0E14867de4EB15b15C9FFB5859';
+
 const hooksConfig = {
   router: {
-    query: { hash: CURRENT_ADDRESS, token: TOKEN_HASH },
+    query: { hash: CURRENT_ADDRESS, token: '0x1189a607CEac2f0E14867de4EB15b15C9FFB5859' },
   },
 };
+
+const test = base.extend<socketServer.SocketServerFixture>({
+  createSocket: socketServer.createSocket,
+});
 
 // FIXME
 // test cases which use socket cannot run in parallel since the socket server always run on the same port
 test.describe.configure({ mode: 'serial' });
 
-const tokenTransfersWithPagination = {
-  items: [ tokenTransferMock.erc1155A ],
-  next_page_params: { block_number: 1, index: 1, items_count: 1 },
-};
-const tokenTransfersWoPagination = {
-  items: [ tokenTransferMock.erc1155A ],
-  next_page_params: null,
-};
+test('with token filter and pagination', async({ mount, page }) => {
+  await page.route(API_URL, (route) => route.fulfill({
+    status: 200,
+    body: JSON.stringify({ items: [ tokenTransferMock.erc1155A ], next_page_params: { block_number: 1 } }),
+  }));
 
-test('with token filter and pagination', async({ render, mockApiResponse }) => {
-  await mockApiResponse('address_token_transfers', tokenTransfersWithPagination, {
-    pathParams: { hash: CURRENT_ADDRESS },
-    queryParams: { token: TOKEN_HASH },
-  });
-  const component = await render(
-    <Box pt={{ base: '134px', lg: 6 }}>
+  const component = await mount(
+    <TestApp>
+      <Box h={{ base: '134px', lg: 6 }}/>
       <AddressTokenTransfers/>
-    </Box>,
+    </TestApp>,
     { hooksConfig },
   );
+
   await expect(component).toHaveScreenshot();
 });
 
-test('with token filter and no pagination', async({ render, mockApiResponse }) => {
-  await mockApiResponse('address_token_transfers', tokenTransfersWoPagination, {
-    pathParams: { hash: CURRENT_ADDRESS },
-    queryParams: { token: TOKEN_HASH },
-  });
-  const component = await render(
-    <Box pt={{ base: '134px', lg: 6 }}>
+test('with token filter and no pagination', async({ mount, page }) => {
+  await page.route(API_URL, (route) => route.fulfill({
+    status: 200,
+    body: JSON.stringify({ items: [ tokenTransferMock.erc1155A ] }),
+  }));
+
+  const component = await mount(
+    <TestApp>
+      <Box h={{ base: '134px', lg: 6 }}/>
       <AddressTokenTransfers/>
-    </Box>,
+    </TestApp>,
     { hooksConfig },
   );
+
   await expect(component).toHaveScreenshot();
 });
 
 test.describe('mobile', () => {
   test.use({ viewport: devices['iPhone 13 Pro'].viewport });
 
-  test('with token filter and pagination', async({ render, mockApiResponse }) => {
-    await mockApiResponse('address_token_transfers', tokenTransfersWithPagination, {
-      pathParams: { hash: CURRENT_ADDRESS },
-      queryParams: { token: TOKEN_HASH },
-    });
-    const component = await render(
-      <Box pt={{ base: '134px', lg: 6 }}>
+  test('with token filter and pagination', async({ mount, page }) => {
+    await page.route(API_URL, (route) => route.fulfill({
+      status: 200,
+      body: JSON.stringify({ items: [ tokenTransferMock.erc1155A ], next_page_params: { block_number: 1 } }),
+    }));
+
+    const component = await mount(
+      <TestApp>
+        <Box h={{ base: '134px', lg: 6 }}/>
         <AddressTokenTransfers/>
-      </Box>,
+      </TestApp>,
       { hooksConfig },
     );
+
     await expect(component).toHaveScreenshot();
   });
 
-  test('with token filter and no pagination', async({ render, mockApiResponse }) => {
-    await mockApiResponse('address_token_transfers', tokenTransfersWoPagination, {
-      pathParams: { hash: CURRENT_ADDRESS },
-      queryParams: { token: TOKEN_HASH },
-    });
-    const component = await render(
-      <Box pt={{ base: '134px', lg: 6 }}>
+  test('with token filter and no pagination', async({ mount, page }) => {
+    await page.route(API_URL, (route) => route.fulfill({
+      status: 200,
+      body: JSON.stringify({ items: [ tokenTransferMock.erc1155A ] }),
+    }));
+
+    const component = await mount(
+      <TestApp>
+        <Box h={{ base: '134px', lg: 6 }}/>
         <AddressTokenTransfers/>
-      </Box>,
+      </TestApp>,
       { hooksConfig },
     );
+
     await expect(component).toHaveScreenshot();
   });
 });
 
 test.describe('socket', () => {
-  test('without overload', async({ render, mockApiResponse, createSocket, page }) => {
+  test('without overload', async({ mount, page, createSocket }) => {
     const hooksConfigNoToken = {
       router: {
         query: { hash: CURRENT_ADDRESS },
       },
     };
-    await mockApiResponse('address_token_transfers', tokenTransfersWithPagination, {
-      pathParams: { hash: CURRENT_ADDRESS },
-      queryParams: { type: [] },
-    });
-    await render(
-      <Box pt={{ base: '134px', lg: 6 }}>
+
+    const API_URL_NO_TOKEN = buildApiUrl('address_token_transfers', { hash: CURRENT_ADDRESS }) + '?type=';
+
+    await page.route(API_URL_NO_TOKEN, (route) => route.fulfill({
+      status: 200,
+      body: JSON.stringify({ items: [ tokenTransferMock.erc1155A ], next_page_params: { block_number: 1 } }),
+    }));
+
+    await mount(
+      <TestApp withSocket>
+        <Box h={{ base: '134px', lg: 6 }}/>
         <AddressTokenTransfers/>
-      </Box>,
+      </TestApp>,
       { hooksConfig: hooksConfigNoToken },
-      { withSocket: true },
     );
 
     const socket = await createSocket();
@@ -121,22 +137,26 @@ test.describe('socket', () => {
     expect(itemsCountNew).toBe(4);
   });
 
-  test('with overload', async({ render, mockApiResponse, page, createSocket }) => {
+  test('with overload', async({ mount, page, createSocket }) => {
     const hooksConfigNoToken = {
       router: {
         query: { hash: CURRENT_ADDRESS },
       },
     };
-    await mockApiResponse('address_token_transfers', tokenTransfersWithPagination, {
-      pathParams: { hash: CURRENT_ADDRESS },
-      queryParams: { type: [] },
-    });
-    await render(
-      <Box pt={{ base: '134px', lg: 6 }}>
+
+    const API_URL_NO_TOKEN = buildApiUrl('address_token_transfers', { hash: CURRENT_ADDRESS }) + '?type=';
+
+    await page.route(API_URL_NO_TOKEN, (route) => route.fulfill({
+      status: 200,
+      body: JSON.stringify({ items: [ tokenTransferMock.erc1155A ], next_page_params: { block_number: 1 } }),
+    }));
+
+    await mount(
+      <TestApp withSocket>
+        <Box h={{ base: '134px', lg: 6 }}/>
         <AddressTokenTransfers overloadCount={ 2 }/>
-      </Box>,
+      </TestApp>,
       { hooksConfig: hooksConfigNoToken },
-      { withSocket: true },
     );
 
     const socket = await createSocket();
@@ -156,23 +176,26 @@ test.describe('socket', () => {
     expect(counter?.startsWith('1 ')).toBe(true);
   });
 
-  test('without overload, with filters', async({ render, mockApiResponse, page, createSocket }) => {
+  test('without overload, with filters', async({ mount, page, createSocket }) => {
     const hooksConfigWithFilter = {
       router: {
         query: { hash: CURRENT_ADDRESS, type: 'ERC-1155' },
       },
     };
-    await mockApiResponse('address_token_transfers', tokenTransfersWithPagination, {
-      pathParams: { hash: CURRENT_ADDRESS },
-      queryParams: { type: 'ERC-1155' },
-    });
 
-    await render(
-      <Box pt={{ base: '134px', lg: 6 }}>
+    const API_URL_WITH_FILTER = buildApiUrl('address_token_transfers', { hash: CURRENT_ADDRESS }) + '?type=ERC-1155';
+
+    await page.route(API_URL_WITH_FILTER, (route) => route.fulfill({
+      status: 200,
+      body: JSON.stringify({ items: [ tokenTransferMock.erc1155A ], next_page_params: { block_number: 1 } }),
+    }));
+
+    await mount(
+      <TestApp withSocket>
+        <Box h={{ base: '134px', lg: 6 }}/>
         <AddressTokenTransfers/>
-      </Box>,
+      </TestApp>,
       { hooksConfig: hooksConfigWithFilter },
-      { withSocket: true },
     );
 
     const socket = await createSocket();
@@ -189,23 +212,26 @@ test.describe('socket', () => {
     expect(itemsCountNew).toBe(3);
   });
 
-  test('with overload, with filters', async({ render, mockApiResponse, page, createSocket }) => {
+  test('with overload, with filters', async({ mount, page, createSocket }) => {
     const hooksConfigWithFilter = {
       router: {
         query: { hash: CURRENT_ADDRESS, type: 'ERC-1155' },
       },
     };
-    await mockApiResponse('address_token_transfers', tokenTransfersWithPagination, {
-      pathParams: { hash: CURRENT_ADDRESS },
-      queryParams: { type: 'ERC-1155' },
-    });
 
-    await render(
-      <Box pt={{ base: '134px', lg: 6 }}>
+    const API_URL_WITH_FILTER = buildApiUrl('address_token_transfers', { hash: CURRENT_ADDRESS }) + '?type=ERC-1155';
+
+    await page.route(API_URL_WITH_FILTER, (route) => route.fulfill({
+      status: 200,
+      body: JSON.stringify({ items: [ tokenTransferMock.erc1155A ], next_page_params: { block_number: 1 } }),
+    }));
+
+    await mount(
+      <TestApp withSocket>
+        <Box h={{ base: '134px', lg: 6 }}/>
         <AddressTokenTransfers overloadCount={ 2 }/>
-      </Box>,
+      </TestApp>,
       { hooksConfig: hooksConfigWithFilter },
-      { withSocket: true },
     );
 
     const socket = await createSocket();

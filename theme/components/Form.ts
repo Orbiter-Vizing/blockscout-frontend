@@ -1,8 +1,9 @@
 import { formAnatomy as parts } from '@chakra-ui/anatomy';
 import { createMultiStyleConfigHelpers } from '@chakra-ui/styled-system';
 import type { StyleFunctionProps } from '@chakra-ui/theme-tools';
+import { getColor, mode } from '@chakra-ui/theme-tools';
 
-import getFormStyles from '../utils/getFormStyles';
+import getDefaultFormColors from '../utils/getDefaultFormColors';
 import FancySelect from './FancySelect';
 import FormLabel from './FormLabel';
 import Input from './Input';
@@ -12,7 +13,8 @@ const { definePartsStyle, defineMultiStyleConfig } =
   createMultiStyleConfigHelpers(parts.keys);
 
 function getFloatingVariantStylesForSize(size: 'md' | 'lg', props: StyleFunctionProps) {
-  const formStyles = getFormStyles(props);
+  const { theme } = props;
+  const { focusPlaceholderColor, errorColor } = getDefaultFormColors(props);
 
   const activeLabelStyles = {
     ...FormLabel.variants?.floating?.(props)._focusWithin,
@@ -61,29 +63,12 @@ function getFloatingVariantStylesForSize(size: 'md' | 'lg', props: StyleFunction
       // label styles
       label: FormLabel.sizes?.[size](props) || {},
       'input:not(:placeholder-shown) + label, textarea:not(:placeholder-shown) + label': activeLabelStyles,
-      'textarea:not(:placeholder-shown) + label': {
-        bgColor: formStyles.input.filled.bgColor,
-      },
-      [`
-        input[readonly] + label,
-        textarea[readonly] + label,
-        &[aria-readonly=true] label
-      `]: {
-        bgColor: formStyles.input.readOnly.bgColor,
-      },
       [`
         input[aria-invalid=true] + label, 
         textarea[aria-invalid=true] + label,
         &[aria-invalid=true] label
       `]: {
-        color: formStyles.placeholder.error.color,
-      },
-      [`
-        input[disabled] + label,
-        textarea[disabled] + label,
-        &[aria-disabled=true] label
-      `]: {
-        color: formStyles.placeholder.disabled.color,
+        color: getColor(theme, errorColor),
       },
 
       // input styles
@@ -94,24 +79,31 @@ function getFloatingVariantStylesForSize(size: 'md' | 'lg', props: StyleFunction
         padding: inputPx,
       },
       'input:not(:placeholder-shown), textarea:not(:placeholder-shown)': activeInputStyles,
+      [`
+        input[disabled] + label, 
+        &[aria-disabled=true] label
+      `]: {
+        backgroundColor: 'transparent',
+      },
+      // in textarea bg of label could not be transparent; it should match the background color of input but without alpha
+      // so we have to use non-standard colors here
+      'textarea[disabled] + label': {
+        backgroundColor: mode('#ececec', '#232425')(props),
+      },
+      'textarea[disabled] + label[data-in-modal=true]': {
+        backgroundColor: mode('#ececec', '#292b34')(props),
+      },
 
       // indicator styles
       'input:not(:placeholder-shown) + label .chakra-form__required-indicator, textarea:not(:placeholder-shown) + label .chakra-form__required-indicator': {
-        color: formStyles.placeholder.default.color,
+        color: getColor(theme, focusPlaceholderColor),
       },
       [`
         input[aria-invalid=true] + label .chakra-form__required-indicator,
         textarea[aria-invalid=true] + label .chakra-form__required-indicator,
         &[aria-invalid=true] .chakra-form__required-indicator
       `]: {
-        color: formStyles.placeholder.error.color,
-      },
-      [`
-        input[disabled] + label .chakra-form__required-indicator,
-        textarea[disabled] + label .chakra-form__required-indicator,
-        &[aria-disabled=true] .chakra-form__required-indicator
-      `]: {
-        color: formStyles.placeholder.disabled.color,
+        color: getColor(theme, errorColor),
       },
     },
   };

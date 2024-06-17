@@ -6,7 +6,7 @@ dotenv \
   -e .env.local \
   -e .env.development \
   -e .env \
-  -- bash -c './deploy/scripts/download_assets.sh ./public/assets/configs'
+  -- bash -c './deploy/scripts/download_assets.sh ./public/assets'
 
 yarn svg:build-sprite
 echo ""
@@ -20,5 +20,5 @@ dotenv \
   -e .env.local \
   -e .env.development \
   -e .env \
-  -- bash -c './deploy/scripts/make_envs_script.sh && next dev -p $NEXT_PUBLIC_APP_PORT' |
+  -- bash -c './deploy/scripts/make_envs_script.sh && next dev -- -p 3000' |
 pino-pretty

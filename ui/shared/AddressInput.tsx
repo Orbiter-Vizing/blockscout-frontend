@@ -13,7 +13,7 @@ type Props<TInputs extends FieldValues, TInputName extends Path<TInputs>> = {
   field: ControllerRenderProps<TInputs, TInputName>;
   size?: InputProps['size'];
   placeholder?: string;
-  bgColor?: string;
+  backgroundColor?: string;
   error?: FieldError;
 }
 
@@ -23,15 +23,14 @@ export default function AddressInput<Inputs extends FieldValues, Name extends Pa
     field,
     size,
     placeholder = 'Address (0x...)',
-    bgColor,
+    backgroundColor,
   }: Props<Inputs, Name>) {
   return (
-    <FormControl variant="floating" id="address" isRequired size={ size } bgColor={ bgColor }>
+    <FormControl variant="floating" id="address" isRequired backgroundColor={ backgroundColor } size={ size }>
       <Input
         { ...field }
         isInvalid={ Boolean(error) }
         maxLength={ ADDRESS_LENGTH }
-        bgColor={ bgColor }
       />
       <InputPlaceholder text={ placeholder } error={ error }/>
     </FormControl>

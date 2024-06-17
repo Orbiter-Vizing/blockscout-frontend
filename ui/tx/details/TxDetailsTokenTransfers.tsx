@@ -5,9 +5,9 @@ import type { TokenTransfer } from 'types/api/tokenTransfer';
 
 import { route } from 'nextjs-routes';
 
-import * as DetailsInfoItem from 'ui/shared/DetailsInfoItem';
+import DetailsInfoItem from 'ui/shared/DetailsInfoItem';
 import IconSvg from 'ui/shared/IconSvg';
-import LinkInternal from 'ui/shared/links/LinkInternal';
+import LinkInternal from 'ui/shared/LinkInternal';
 
 import TxDetailsTokenTransfer from './TxDetailsTokenTransfer';
 
@@ -40,24 +40,22 @@ const TxDetailsTokenTransfers = ({ data, txHash, isOverflow }: Props) => {
         }
 
         return (
-          <React.Fragment key={ type }>
-            <DetailsInfoItem.Label
-              hint={ hint }
+          <DetailsInfoItem
+            key={ type }
+            title={ title }
+            hint={ hint }
+            position="relative"
+          >
+            <Flex
+              flexDirection="column"
+              alignItems="flex-start"
+              rowGap={ 5 }
+              w="100%"
+              overflow="hidden"
             >
-              { title }
-            </DetailsInfoItem.Label>
-            <DetailsInfoItem.Value position="relative">
-              <Flex
-                flexDirection="column"
-                alignItems="flex-start"
-                rowGap={ 5 }
-                w="100%"
-                overflow="hidden"
-              >
-                { items.map((item, index) => <TxDetailsTokenTransfer key={ index } data={ item }/>) }
-              </Flex>
-            </DetailsInfoItem.Value>
-          </React.Fragment>
+              { items.map((item, index) => <TxDetailsTokenTransfer key={ index } data={ item }/>) }
+            </Flex>
+          </DetailsInfoItem>
         );
       }) }
       { isOverflow && (

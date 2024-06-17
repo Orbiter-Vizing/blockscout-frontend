@@ -20,8 +20,7 @@ const TokenInfoFieldProjectDescription = ({ control, isReadOnly }: Props) => {
           { ...field }
           required
           isInvalid={ Boolean(fieldState.error) }
-          isDisabled={ formState.isSubmitting }
-          isReadOnly={ isReadOnly }
+          isDisabled={ formState.isSubmitting || isReadOnly }
           autoComplete="off"
           maxH="160px"
           maxLength={ 300 }

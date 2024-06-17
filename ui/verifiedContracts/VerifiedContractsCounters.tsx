@@ -1,7 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import React from 'react';
 
-import config from 'configs/app';
 import useApiQuery from 'lib/api/useApiQuery';
 import { VERIFIED_CONTRACTS_COUNTERS } from 'stubs/contract';
 import StatsWidget from 'ui/shared/stats/StatsWidget';
@@ -25,7 +24,7 @@ const VerifiedContractsCounters = () => {
         diff={ countersQuery.data.new_smart_contracts_24h }
         diffFormatted={ Number(countersQuery.data.new_smart_contracts_24h).toLocaleString() }
         isLoading={ countersQuery.isPlaceholderData }
-        href={ config.features.stats.isEnabled ? { pathname: '/stats', query: { chartId: 'contractsGrowth' } } : undefined }
+        href={{ pathname: '/stats', query: { chartId: 'contractsGrowth' } }}
       />
       <StatsWidget
         label="Verified contracts"
@@ -33,7 +32,7 @@ const VerifiedContractsCounters = () => {
         diff={ countersQuery.data.new_verified_smart_contracts_24h }
         diffFormatted={ Number(countersQuery.data.new_verified_smart_contracts_24h).toLocaleString() }
         isLoading={ countersQuery.isPlaceholderData }
-        href={ config.features.stats.isEnabled ? { pathname: '/stats', query: { chartId: 'verifiedContractsGrowth' } } : undefined }
+        href={{ pathname: '/stats', query: { chartId: 'verifiedContractsGrowth' } }}
       />
     </Box>
   );

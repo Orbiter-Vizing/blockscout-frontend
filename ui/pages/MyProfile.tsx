@@ -27,7 +27,7 @@ const MyProfile = () => {
         <FormControl variant="floating" id="name" isRequired size="lg">
           <Input
             required
-            readOnly
+            disabled
             value={ data.name || '' }
           />
           <FormLabel>Name</FormLabel>
@@ -35,7 +35,7 @@ const MyProfile = () => {
         <FormControl variant="floating" id="nickname" isRequired size="lg">
           <Input
             required
-            readOnly
+            disabled
             value={ data.nickname || '' }
           />
           <FormLabel>Nickname</FormLabel>
@@ -43,7 +43,7 @@ const MyProfile = () => {
         <FormControl variant="floating" id="email" isRequired size="lg">
           <Input
             required
-            readOnly
+            disabled
             value={ data.email || '' }
           />
           <FormLabel>Email</FormLabel>

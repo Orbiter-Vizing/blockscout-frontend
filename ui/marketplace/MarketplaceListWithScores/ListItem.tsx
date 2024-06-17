@@ -94,6 +94,7 @@ const ListItem = ({ app, onInfoClick, isFavorite, onFavoriteClick, isLoading, on
                   isLoading={ isLoading }
                   securityReport={ securityReport }
                   showContractList={ showAnalyzedContracts }
+                  height="30px"
                   source="Security view"
                 />
                 <ContractListButton
