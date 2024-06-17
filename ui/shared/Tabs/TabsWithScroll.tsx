@@ -91,12 +91,10 @@ const TabsWithScroll = ({
       lazyBehavior={ lazyBehavior }
     >
       <AdaptiveTabsList
-        // the easiest and most readable way to achieve correct tab's cut recalculation when
-        //    - screen is resized or
-        //    - tabs list is changed when API data is loaded
+        // the easiest and most readable way to achieve correct tab's cut recalculation when screen is resized
         // is to do full re-render of the tabs list
-        // so we use screenWidth + tabIds as a key for the TabsList component
-        key={ screenWidth + '_' + tabsList.map((tab) => tab.id).join(':') }
+        // so we use screenWidth as a key for the TabsList component
+        key={ screenWidth }
         tabs={ tabs }
         tabListProps={ tabListProps }
         rightSlot={ rightSlot }

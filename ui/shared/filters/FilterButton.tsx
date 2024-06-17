@@ -35,7 +35,6 @@ const FilterButton = ({ isActive, isLoading, appliedFiltersNum, onClick, as }: P
       px={ 1.5 }
       flexShrink={ 0 }
       as={ as }
-      pointerEvents="all"
     >
       { FilterIcon }
       <Box display={{ base: 'none', lg: 'block' }}>Filter</Box>
