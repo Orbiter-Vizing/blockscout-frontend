@@ -43,7 +43,7 @@ export default function useMarketplace() {
   const [ contractListModalType, setContractListModalType ] = React.useState<ContractListTypes | null>(null);
   const [ hasPreviousStep, setHasPreviousStep ] = React.useState<boolean>(false);
 
-  const handleFavoriteClick = React.useCallback((id: string, isFavorite: boolean, source: 'Discovery view' | 'Security view' | 'App modal' | 'Banner') => {
+  const handleFavoriteClick = React.useCallback((id: string, isFavorite: boolean, source: 'Discovery view' | 'Security view' | 'App modal') => {
     mixpanel.logEvent(mixpanel.EventTypes.PAGE_WIDGET, { Type: 'Favorite app', Info: id, Source: source });
 
     const favoriteApps = getFavoriteApps();
@@ -146,7 +146,6 @@ export default function useMarketplace() {
     isError,
     error,
     categories,
-    apps: data,
     displayedApps,
     showAppInfo,
     selectedAppId,
@@ -168,7 +167,6 @@ export default function useMarketplace() {
     categories,
     clearSelectedAppId,
     selectedAppId,
-    data,
     displayedApps,
     error,
     favoriteApps,
@@ -181,6 +179,7 @@ export default function useMarketplace() {
     isAppInfoModalOpen,
     isDisclaimerModalOpen,
     showDisclaimer,
+    data?.length,
     isCategoriesPlaceholderData,
     showContractList,
     contractListModalType,

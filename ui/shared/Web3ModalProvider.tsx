@@ -27,7 +27,6 @@ const init = () => {
         '--w3m-z-index': zIndices.modal,
       },
       allWallets: 'HIDE',
-      // 添加,id在下面的 相关说明 链接里面
       includeWalletIds: [
         'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
         '38f5d18bd8522c244bdd70cb4a68e0e718865155811c043f052fb9f1c51de662',

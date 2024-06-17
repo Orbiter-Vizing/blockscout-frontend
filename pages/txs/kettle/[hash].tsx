@@ -9,7 +9,7 @@ const KettleTxs = dynamic(() => import('ui/pages/KettleTxs'), { ssr: false });
 
 const Page: NextPage<Props> = (props: Props) => {
   return (
-    <PageNextJs pathname="/txs/kettle/[hash]" query={ props.query }>
+    <PageNextJs pathname="/txs/kettle/[hash]" query={ props }>
       <KettleTxs/>
     </PageNextJs>
   );

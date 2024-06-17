@@ -50,9 +50,9 @@ const Footer = () => {
       url: 'https://github.com/blockscout/blockscout',
     },
     {
-      icon: 'social/twitter' as const,
+      icon: 'social/tweet' as const,
       iconSize: '18px',
-      text: 'X (ex-Twitter)',
+      text: 'Twitter',
       url: 'https://www.twitter.com/blockscoutcom',
     },
     {

@@ -25,15 +25,15 @@ const baseStyleList = defineStyle({
 
 const baseStyleItem = defineStyle({
   _focus: {
-    [$bg.variable]: 'transparent',
+    [$bg.variable]: 'colors.blue.50',
     _dark: {
-      [$bg.variable]: 'transparent',
+      [$bg.variable]: 'colors.gray.800',
     },
   },
   _hover: {
     [$bg.variable]: 'colors.blue.50',
     _dark: {
-      [$bg.variable]: 'colors.whiteAlpha.100',
+      [$bg.variable]: 'colors.gray.800',
     },
   },
   bg: $bg.reference,

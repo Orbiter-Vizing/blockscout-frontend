@@ -54,7 +54,6 @@ const AppSecurityReport = ({ id, securityReport, height, showContractList, isLoa
           onClick={ handleButtonClick }
           height={ height }
           onlyIcon={ onlyIcon }
-          label="The security score is based on analysis of a DApp's smart contracts."
         />
       </PopoverTrigger>
       <PopoverContent w={{ base: '100vw', lg: '328px' }}>

@@ -1,14 +1,20 @@
-import type { BrowserContext } from '@playwright/test';
+import { test as base, expect } from '@playwright/experimental-ct-react';
 import React from 'react';
 
 import * as profileMock from 'mocks/user/profile';
-import { contextWithAuth } from 'playwright/fixtures/auth';
-import { test as base, expect } from 'playwright/lib';
+import authFixture from 'playwright/fixtures/auth';
+import TestApp from 'playwright/TestApp';
+import buildApiUrl from 'playwright/utils/buildApiUrl';
 
 import AccountActionsMenu from './AccountActionsMenu';
 
-const test = base.extend<{ context: BrowserContext }>({
-  context: contextWithAuth,
+const USER_INFO_URL = buildApiUrl('user_info');
+
+const test = base.extend({
+  context: ({ context }, use) => {
+    authFixture(context);
+    use(context);
+  },
 });
 
 test.use({ viewport: { width: 200, height: 200 } });
@@ -22,32 +28,56 @@ test.describe('with multiple items', async() => {
     },
   };
 
-  test.beforeEach(async({ mockApiResponse }) => {
-    mockApiResponse('user_info', profileMock.base);
+  test.beforeEach(async({ page }) => {
+    await page.route(USER_INFO_URL, (route) => route.fulfill({
+      body: JSON.stringify(profileMock.base),
+    }));
   });
 
-  test('base view', async({ render, page }) => {
-    const component = await render(<AccountActionsMenu/>, { hooksConfig });
+  test('base view', async({ mount, page }) => {
+    const component = await mount(
+      <TestApp>
+        <AccountActionsMenu/>
+      </TestApp>,
+      { hooksConfig },
+    );
+
     await component.getByRole('button').click();
 
     await expect(page).toHaveScreenshot();
   });
 
-  test('base view with styles', async({ render, page }) => {
-    const component = await render(<AccountActionsMenu m={ 2 } outline="1px solid lightpink"/>, { hooksConfig });
+  test('base view with styles', async({ mount, page }) => {
+    const component = await mount(
+      <TestApp>
+        <AccountActionsMenu m={ 2 } outline="1px solid lightpink"/>
+      </TestApp>,
+      { hooksConfig },
+    );
+
     await component.getByRole('button').click();
 
     await expect(page).toHaveScreenshot();
   });
 
-  test('loading', async({ render }) => {
-    const component = await render(<AccountActionsMenu isLoading/>, { hooksConfig });
+  test('loading', async({ mount }) => {
+    const component = await mount(
+      <TestApp>
+        <AccountActionsMenu isLoading/>
+      </TestApp>,
+      { hooksConfig },
+    );
 
     await expect(component).toHaveScreenshot();
   });
 
-  test('loading with styles', async({ render }) => {
-    const component = await render(<AccountActionsMenu isLoading m={ 2 } outline="1px solid lightpink"/>, { hooksConfig });
+  test('loading with styles', async({ mount }) => {
+    const component = await mount(
+      <TestApp>
+        <AccountActionsMenu isLoading m={ 2 } outline="1px solid lightpink"/>
+      </TestApp>,
+      { hooksConfig },
+    );
 
     await expect(component).toHaveScreenshot();
   });
@@ -62,22 +92,39 @@ test.describe('with one item', async() => {
     },
   };
 
-  test('base view', async({ render, page }) => {
-    const component = await render(<AccountActionsMenu/>, { hooksConfig });
+  test('base view', async({ mount, page }) => {
+    const component = await mount(
+      <TestApp>
+        <AccountActionsMenu/>
+      </TestApp>,
+      { hooksConfig },
+    );
+
     await component.getByRole('button').hover();
 
     await expect(page).toHaveScreenshot();
   });
 
-  test('base view with styles', async({ render, page }) => {
-    const component = await render(<AccountActionsMenu m={ 2 } outline="1px solid lightpink"/>, { hooksConfig });
+  test('base view with styles', async({ mount, page }) => {
+    const component = await mount(
+      <TestApp>
+        <AccountActionsMenu m={ 2 } outline="1px solid lightpink"/>
+      </TestApp>,
+      { hooksConfig },
+    );
+
     await component.getByRole('button').hover();
 
     await expect(page).toHaveScreenshot();
   });
 
-  test('loading', async({ render }) => {
-    const component = await render(<AccountActionsMenu isLoading/>, { hooksConfig });
+  test('loading', async({ mount }) => {
+    const component = await mount(
+      <TestApp>
+        <AccountActionsMenu isLoading/>
+      </TestApp>,
+      { hooksConfig },
+    );
 
     await expect(component).toHaveScreenshot();
   });

@@ -16,7 +16,7 @@ const GasInfoTooltipRow = ({ name, info }: Props) => {
     <>
       <Box>
         <chakra.span>{ name }</chakra.span>
-        { info && typeof info.time === 'number' && info.time > 0 && (
+        { info && info.time && (
           <chakra.span color="text_secondary">
             { space }{ (info.time / 1000).toLocaleString(undefined, { maximumFractionDigits: 1 }) }s
           </chakra.span>

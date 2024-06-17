@@ -4,29 +4,26 @@ import type { Route } from 'nextjs-routes';
 
 import generate from './generate';
 
-interface TestCase<Pathname extends Route['pathname']> {
+interface TestCase<R extends Route> {
   title: string;
-  route: {
-    pathname: Pathname;
-    query?: Route['query'];
-  };
-  apiData?: ApiData<Pathname>;
+  route: R;
+  apiData?: ApiData<R>;
 }
 
-const TEST_CASES = [
+const TEST_CASES: Array<TestCase<Route>> = [
   {
     title: 'static route',
     route: {
       pathname: '/blocks',
     },
-  } as TestCase<'/blocks'>,
+  },
   {
     title: 'dynamic route',
     route: {
       pathname: '/tx/[hash]',
       query: { hash: '0x12345' },
     },
-  } as TestCase<'/tx/[hash]'>,
+  },
   {
     title: 'dynamic route with API data',
     route: {
@@ -34,7 +31,7 @@ const TEST_CASES = [
       query: { hash: '0x12345' },
     },
     apiData: { symbol: 'USDT' },
-  } as TestCase<'/token/[hash]'>,
+  } as TestCase<{ pathname: '/token/[hash]'; query: { hash: string }}>,
 ];
 
 describe('generates correct metadata for:', () => {

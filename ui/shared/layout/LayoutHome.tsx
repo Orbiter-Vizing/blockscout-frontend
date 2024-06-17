@@ -12,7 +12,7 @@ const LayoutHome = ({ children }: Props) => {
   return (
     <Layout.Container>
       <Layout.TopRow/>
-      <HeaderMobile hideSearchBar/>
+      <HeaderMobile isHomePage/>
       <Layout.MainArea>
         <Layout.SideBar/>
         <Layout.MainColumn

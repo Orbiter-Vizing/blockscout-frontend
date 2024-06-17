@@ -1,5 +1,5 @@
 import type { IconButtonProps } from '@chakra-ui/react';
-import { Popover, PopoverContent, PopoverBody, PopoverTrigger, IconButton, Tooltip, Box, chakra } from '@chakra-ui/react';
+import { Popover, PopoverContent, PopoverBody, PopoverTrigger, IconButton, Tooltip, Box } from '@chakra-ui/react';
 import React from 'react';
 
 import useFetchProfileInfo from 'lib/hooks/useFetchProfileInfo';
@@ -12,11 +12,9 @@ import useMenuButtonColors from '../useMenuButtonColors';
 
 type Props = {
   isHomePage?: boolean;
-  className?: string;
-  fallbackIconSize?: number;
 };
 
-const ProfileMenuDesktop = ({ isHomePage, className, fallbackIconSize }: Props) => {
+const ProfileMenuDesktop = ({ isHomePage }: Props) => {
   const { data, error, isPending } = useFetchProfileInfo();
   const loginUrl = useLoginUrl();
   const { themedBackground, themedBorderColor, themedColor } = useMenuButtonColors();
@@ -83,9 +81,8 @@ const ProfileMenuDesktop = ({ isHomePage, className, fallbackIconSize }: Props) 
         <Box>
           <PopoverTrigger>
             <IconButton
-              className={ className }
               aria-label="profile menu"
-              icon={ <UserAvatar size={ 20 } fallbackIconSize={ fallbackIconSize }/> }
+              icon={ <UserAvatar size={ 20 }/> }
               variant={ variant }
               colorScheme="blue"
               boxSize="40px"
@@ -107,4 +104,4 @@ const ProfileMenuDesktop = ({ isHomePage, className, fallbackIconSize }: Props) 
   );
 };
 
-export default chakra(ProfileMenuDesktop);
+export default ProfileMenuDesktop;

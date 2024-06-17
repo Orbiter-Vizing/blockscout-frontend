@@ -19,7 +19,6 @@ export enum EventTypes {
   EXPERIMENT_STARTED = 'Experiment started',
   FILTERS = 'Filters',
   BUTTON_CLICK = 'Button click',
-  PROMO_BANNER = 'Promo banner',
 }
 
 /* eslint-disable @typescript-eslint/indent */
@@ -101,7 +100,7 @@ Type extends EventTypes.PAGE_WIDGET ? (
   } | {
     'Type': 'Favorite app' | 'More button' | 'Security score' | 'Total contracts' | 'Verified contracts' | 'Analyzed contracts';
     'Info': string;
-    'Source': 'Discovery view' | 'Security view' | 'App modal' | 'App page' | 'Security score popup' | 'Banner';
+    'Source': 'Discovery view' | 'Security view' | 'App modal' | 'App page' | 'Security score popup';
   } | {
     'Type': 'Security score';
     'Source': 'Analyzed contracts popup';
@@ -122,10 +121,6 @@ Type extends EventTypes.FILTERS ? {
 Type extends EventTypes.BUTTON_CLICK ? {
   'Content': 'Swap button';
   'Source': string;
-} :
-Type extends EventTypes.PROMO_BANNER ? {
-  'Source': 'Marketplace';
-  'Link': string;
 } :
 undefined;
 /* eslint-enable @typescript-eslint/indent */

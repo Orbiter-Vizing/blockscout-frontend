@@ -1,17 +1,16 @@
-import { Box, chakra } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import React from 'react';
 
 interface Props {
   children: React.ReactNode;
-  className?: string;
 }
 
-const Container = ({ children, className }: Props) => {
+const Container = ({ children }: Props) => {
   return (
-    <Box className={ className } minWidth={{ base: '100vw', lg: 'fit-content' }}>
+    <Box minWidth={{ base: '100vw', lg: 'fit-content' }}>
       { children }
     </Box>
   );
 };
 
-export default React.memo(chakra(Container));
+export default React.memo(Container);

@@ -2,7 +2,6 @@ import { Show, Hide } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import useIsMounted from 'lib/hooks/useIsMounted';
 import getQueryParamString from 'lib/router/getQueryParamString';
 import { generateListStub } from 'stubs/utils';
 import { WITHDRAWAL } from 'stubs/withdrawals';
@@ -13,13 +12,8 @@ import useQueryWithPages from 'ui/shared/pagination/useQueryWithPages';
 import BeaconChainWithdrawalsListItem from 'ui/withdrawals/beaconChain/BeaconChainWithdrawalsListItem';
 import BeaconChainWithdrawalsTable from 'ui/withdrawals/beaconChain/BeaconChainWithdrawalsTable';
 
-type Props = {
-  scrollRef?: React.RefObject<HTMLDivElement>;
-  shouldRender?: boolean;
-}
-const AddressWithdrawals = ({ scrollRef, shouldRender = true }: Props) => {
+const AddressWithdrawals = ({ scrollRef }: {scrollRef?: React.RefObject<HTMLDivElement>}) => {
   const router = useRouter();
-  const isMounted = useIsMounted();
 
   const hash = getQueryParamString(router.query.hash);
 
@@ -34,11 +28,6 @@ const AddressWithdrawals = ({ scrollRef, shouldRender = true }: Props) => {
       } }),
     },
   });
-
-  if (!isMounted || !shouldRender) {
-    return null;
-  }
-
   const content = data?.items ? (
     <>
       <Show below="lg" ssr={ false }>

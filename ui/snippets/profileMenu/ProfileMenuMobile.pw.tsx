@@ -1,40 +1,61 @@
-import type { BrowserContext } from '@playwright/test';
+import { test, expect, devices } from '@playwright/experimental-ct-react';
 import React from 'react';
 
-import config from 'configs/app';
 import * as profileMock from 'mocks/user/profile';
-import { contextWithAuth } from 'playwright/fixtures/auth';
-import { test, expect, devices } from 'playwright/lib';
+import authFixture from 'playwright/fixtures/auth';
+import TestApp from 'playwright/TestApp';
+import * as app from 'playwright/utils/app';
+import buildApiUrl from 'playwright/utils/buildApiUrl';
 
 import ProfileMenuMobile from './ProfileMenuMobile';
 
-test('no auth', async({ render, page }) => {
+test('no auth', async({ mount, page }) => {
   const hooksConfig = {
     router: {
       asPath: '/',
       pathname: '/',
     },
   };
-  const component = await render(<ProfileMenuMobile/>, { hooksConfig });
-  await component.locator('a').click();
+  const component = await mount(
+    <TestApp>
+      <ProfileMenuMobile/>
+    </TestApp>,
+    { hooksConfig },
+  );
 
-  expect(page.url()).toBe(`${ config.app.baseUrl }/auth/auth0?path=%2F`);
+  await component.locator('a').click();
+  expect(page.url()).toBe(`${ app.url }/auth/auth0?path=%2F`);
 });
 
 test.use({ viewport: devices['iPhone 13 Pro'].viewport });
 
-const authTest = test.extend<{ context: BrowserContext }>({
-  context: contextWithAuth,
-});
+test.describe('auth', () => {
+  const extendedTest = test.extend({
+    context: ({ context }, use) => {
+      authFixture(context);
+      use(context);
+    },
+  });
 
-authTest.describe('auth', () => {
-  authTest('base view', async({ render, page, mockApiResponse, mockAssetResponse }) => {
-    await mockApiResponse('user_info', profileMock.base);
-    await mockAssetResponse(profileMock.base.avatar, './playwright/mocks/image_s.jpg');
+  extendedTest('base view', async({ mount, page }) => {
+    await page.route(buildApiUrl('user_info'), (route) => route.fulfill({
+      status: 200,
+      body: JSON.stringify(profileMock.base),
+    }));
+    await page.route(profileMock.base.avatar, (route) => {
+      return route.fulfill({
+        status: 200,
+        path: './playwright/mocks/image_s.jpg',
+      });
+    });
 
-    const component = await render(<ProfileMenuMobile/>);
+    const component = await mount(
+      <TestApp>
+        <ProfileMenuMobile/>
+      </TestApp>,
+    );
+
     await component.getByAltText(/Profile picture/i).click();
-
     await expect(page).toHaveScreenshot();
   });
 });

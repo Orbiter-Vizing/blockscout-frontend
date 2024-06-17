@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import throwOnResourceLoadError from 'lib/errors/throwOnResourceLoadError';
-import useIsMounted from 'lib/hooks/useIsMounted';
 import getQueryParamString from 'lib/router/getQueryParamString';
 import AddressCounterItem from 'ui/address/details/AddressCounterItem';
 import ServiceDegradationWarning from 'ui/shared/alerts/ServiceDegradationWarning';
@@ -61,8 +60,6 @@ const AddressDetails = ({ addressQuery, scrollRef }: Props) => {
     has_validated_blocks: false,
   }), [ addressHash ]);
 
-  const isMounted = useIsMounted();
-
   // error handling (except 404 codes)
   if (addressQuery.isError) {
     if (isCustomAppError(addressQuery.error)) {
@@ -77,7 +74,7 @@ const AddressDetails = ({ addressQuery, scrollRef }: Props) => {
 
   const data = addressQuery.isError ? error404Data : addressQuery.data;
 
-  if (!data || !isMounted) {
+  if (!data) {
     return null;
   }
 

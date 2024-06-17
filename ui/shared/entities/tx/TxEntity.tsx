@@ -71,7 +71,7 @@ const TxEntity = (props: EntityProps) => {
 
   return (
     <Container className={ props.className }>
-      <Icon { ...partsProps } name={ props.iconName } color={ props.iconColor }/>
+      <Icon { ...partsProps }/>
       <Link { ...linkProps }>
         <Content { ...partsProps }/>
       </Link>

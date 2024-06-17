@@ -12,7 +12,7 @@ const SearchResults = dynamic(() => import('ui/pages/SearchResults'), { ssr: fal
 
 const Page: NextPageWithLayout<Props> = (props: Props) => {
   return (
-    <PageNextJs pathname="/search-results" query={ props.query }>
+    <PageNextJs pathname="/search-results" query={ props }>
       <SearchResults/>
     </PageNextJs>
   );

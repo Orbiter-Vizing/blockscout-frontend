@@ -8,10 +8,9 @@ import IconSvg from 'ui/shared/IconSvg';
 
 interface Props {
   size: number;
-  fallbackIconSize?: number;
 }
 
-const UserAvatar = ({ size, fallbackIconSize = 20 }: Props) => {
+const UserAvatar = ({ size }: Props) => {
   const appProps = useAppContext();
   const hasAuth = Boolean(cookies.get(cookies.NAMES.API_TOKEN, appProps.cookies));
   const [ isImageLoadError, setImageLoadError ] = React.useState(false);
@@ -35,7 +34,7 @@ const UserAvatar = ({ size, fallbackIconSize = 20 }: Props) => {
       boxSize={ `${ size }px` }
       borderRadius="full"
       overflow="hidden"
-      fallback={ isImageLoadError || !data?.avatar ? <IconSvg name="profile" boxSize={ `${ fallbackIconSize }px` }/> : undefined }
+      fallback={ isImageLoadError || !data?.avatar ? <IconSvg name="profile" boxSize={ 5 }/> : undefined }
       onError={ handleImageLoadError }
     />
   );

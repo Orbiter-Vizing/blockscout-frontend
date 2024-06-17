@@ -52,14 +52,14 @@ const TokenTransferTableItem = ({
         </Td>
       ) }
       <Td>
-        <TokenEntity
-          token={ token }
-          isLoading={ isLoading }
-          noSymbol
-          noCopy
-          mt={ 1 }
-        />
-        <Flex columnGap={ 2 } rowGap={ 2 } mt={ 2 } flexWrap="wrap">
+        <Flex flexDir="column" alignItems="flex-start" my="3px" rowGap={ 2 }>
+          <TokenEntity
+            token={ token }
+            isLoading={ isLoading }
+            noSymbol
+            noCopy
+            my="2px"
+          />
           <Tag isLoading={ isLoading }>{ token.type }</Tag>
           <Tag colorScheme="orange" isLoading={ isLoading }>{ getTokenTransferTypeText(type) }</Tag>
         </Flex>

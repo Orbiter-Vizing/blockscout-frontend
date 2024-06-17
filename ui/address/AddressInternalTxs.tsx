@@ -6,7 +6,6 @@ import type { AddressFromToFilter } from 'types/api/address';
 import { AddressFromToFilterValues } from 'types/api/address';
 
 import getFilterValueFromQuery from 'lib/getFilterValueFromQuery';
-import useIsMounted from 'lib/hooks/useIsMounted';
 import { apos } from 'lib/html-entities';
 import getQueryParamString from 'lib/router/getQueryParamString';
 import { INTERNAL_TX } from 'stubs/internalTx';
@@ -23,14 +22,8 @@ import AddressIntTxsList from './internals/AddressIntTxsList';
 
 const getFilterValue = (getFilterValueFromQuery<AddressFromToFilter>).bind(null, AddressFromToFilterValues);
 
-type Props = {
-  scrollRef?: React.RefObject<HTMLDivElement>;
-  shouldRender?: boolean;
-}
-const AddressInternalTxs = ({ scrollRef, shouldRender = true }: Props) => {
+const AddressInternalTxs = ({ scrollRef }: {scrollRef?: React.RefObject<HTMLDivElement>}) => {
   const router = useRouter();
-  const isMounted = useIsMounted();
-
   const [ filterValue, setFilterValue ] = React.useState<AddressFromToFilter>(getFilterValue(router.query.filter));
 
   const hash = getQueryParamString(router.query.hash);
@@ -61,10 +54,6 @@ const AddressInternalTxs = ({ scrollRef, shouldRender = true }: Props) => {
     setFilterValue(newVal);
     onFilterChange({ filter: newVal });
   }, [ onFilterChange ]);
-
-  if (!isMounted || !shouldRender) {
-    return null;
-  }
 
   const content = data?.items ? (
     <>
