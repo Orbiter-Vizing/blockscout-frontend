@@ -1,6 +1,6 @@
 import { useColorMode } from '@chakra-ui/react';
 import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc';
-import { createWeb3Modal, useWeb3ModalTheme, defaultWagmiConfig } from '@web3modal/wagmi/react';
+import { createWeb3Modal, defaultWagmiConfig, useWeb3ModalTheme } from '@web3modal/wagmi/react';
 import React from 'react';
 import { configureChains, WagmiConfig } from 'wagmi';
 
@@ -45,11 +45,15 @@ const getConfig = () => {
         '--w3m-border-radius-master': '2px',
         '--w3m-z-index': zIndices.modal,
       },
+      featuredWalletIds: [
+        '38f5d18bd8522c244bdd70cb4a68e0e718865155811c043f052fb9f1c51de662',
+        'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
+      ],
     });
 
     return { wagmiConfig };
   } catch (error) {
-    return { };
+    return {};
   }
 };
 

@@ -21,7 +21,7 @@ const extendedTest = test.extend({
 extendedTest.use({ viewport: { width: 1600, height: 1000 } });
 
 extendedTest('base view +@dark-mode', async({ mount, page }) => {
-  const LOGO_URL = 'https://localhost:3000/my-logo.png';
+  const LOGO_URL = 'https://localhost:3000/logo.svg';
   await page.route(LOGO_URL, (route) => {
     return route.fulfill({
       status: 200,
