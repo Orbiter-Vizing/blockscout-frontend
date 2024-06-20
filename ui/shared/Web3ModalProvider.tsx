@@ -91,3 +91,4 @@ const Provider = ({ children, fallback }: Props) => {
 const Web3ModalProvider = wagmiConfig && feature.isEnabled ? Provider : Fallback;
 
 export default Web3ModalProvider;
+// test
