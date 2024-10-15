@@ -2,12 +2,14 @@ import type { LinkProps as NextLinkProps } from 'next/link';
 import NextLink from 'next/link';
 import React from 'react';
 
-import type { SearchResultItem } from 'types/api/search';
+import type { SearchResultItem } from 'types/client/search';
 
 import { route } from 'nextjs-routes';
 
 import SearchBarSuggestAddress from './SearchBarSuggestAddress';
+import SearchBarSuggestBlob from './SearchBarSuggestBlob';
 import SearchBarSuggestBlock from './SearchBarSuggestBlock';
+import SearchBarSuggestDomain from './SearchBarSuggestDomain';
 import SearchBarSuggestItemLink from './SearchBarSuggestItemLink';
 import SearchBarSuggestLabel from './SearchBarSuggestLabel';
 import SearchBarSuggestToken from './SearchBarSuggestToken';
@@ -37,10 +39,21 @@ const SearchBarSuggestItem = ({ data, isMobile, searchTerm, onClick }: Props) =>
         return route({ pathname: '/tx/[hash]', query: { hash: data.tx_hash } });
       }
       case 'block': {
+        const isFutureBlock = data.timestamp === undefined;
+        if (isFutureBlock) {
+          return route({ pathname: '/block/countdown/[height]', query: { height: String(data.block_number) } });
+        }
+
         return route({ pathname: '/block/[height_or_hash]', query: { height_or_hash: String(data.block_hash) } });
       }
       case 'user_operation': {
         return route({ pathname: '/op/[hash]', query: { hash: data.user_operation_hash } });
+      }
+      case 'blob': {
+        return route({ pathname: '/blobs/[hash]', query: { hash: data.blob_hash } });
+      }
+      case 'ens_domain': {
+        return route({ pathname: '/address/[hash]', query: { hash: data.address } });
       }
     }
   })();
@@ -66,6 +79,12 @@ const SearchBarSuggestItem = ({ data, isMobile, searchTerm, onClick }: Props) =>
       }
       case 'user_operation': {
         return <SearchBarSuggestUserOp data={ data } searchTerm={ searchTerm } isMobile={ isMobile }/>;
+      }
+      case 'blob': {
+        return <SearchBarSuggestBlob data={ data } searchTerm={ searchTerm }/>;
+      }
+      case 'ens_domain': {
+        return <SearchBarSuggestDomain data={ data } searchTerm={ searchTerm } isMobile={ isMobile }/>;
       }
     }
   })();

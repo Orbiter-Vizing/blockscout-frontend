@@ -1,4 +1,5 @@
 import type { AddressParamBasic } from './addressParams';
+import type { DecodedInput } from './decodedInput';
 
 export type UserOpsItem = {
   hash: string;
@@ -46,11 +47,16 @@ export type UserOp = {
   signature: string;
   nonce: string;
   call_data: string;
+  decoded_call_data: DecodedInput | null;
+  execute_call_data: string | null;
+  decoded_execute_call_data: DecodedInput | null;
   user_logs_start_index: number;
   user_logs_count: number;
   raw: {
+    account_gas_limits?: string;
     call_data: string;
     call_gas_limit: string;
+    gas_fees?: string;
     init_code: string;
     max_fee_per_gas: string;
     max_priority_fee_per_gas: string;

@@ -8,8 +8,8 @@ import HashStringShorten from 'ui/shared/HashStringShorten';
 import HashStringShortenDynamic from 'ui/shared/HashStringShortenDynamic';
 import type { IconName } from 'ui/shared/IconSvg';
 import IconSvg from 'ui/shared/IconSvg';
-import LinkExternal from 'ui/shared/LinkExternal';
-import LinkInternal from 'ui/shared/LinkInternal';
+import LinkExternal from 'ui/shared/links/LinkExternal';
+import LinkInternal from 'ui/shared/links/LinkInternal';
 
 import { getIconProps, type IconSize } from './utils';
 
@@ -18,7 +18,9 @@ export type Truncation = 'constant' | 'constant_long' | 'dynamic' | 'tail' | 'no
 export interface EntityBaseProps {
   className?: string;
   href?: string;
+  iconName?: IconName;
   iconSize?: IconSize;
+  iconColor?: IconProps['color'];
   isExternal?: boolean;
   isLoading?: boolean;
   noCopy?: boolean;
@@ -111,9 +113,10 @@ const Icon = ({ isLoading, iconSize, noIcon, name, color, borderRadius }: IconBa
 export interface ContentBaseProps extends Pick<EntityBaseProps, 'className' | 'isLoading' | 'truncation' | 'tailLength'> {
   asProp?: As;
   text: string;
+  isTooltipDisabled?: boolean;
 }
 
-const Content = chakra(({ className, isLoading, asProp, text, truncation = 'dynamic', tailLength }: ContentBaseProps) => {
+const Content = chakra(({ className, isLoading, asProp, text, truncation = 'dynamic', tailLength, isTooltipDisabled }: ContentBaseProps) => {
 
   const children = (() => {
     switch (truncation) {
@@ -123,6 +126,7 @@ const Content = chakra(({ className, isLoading, asProp, text, truncation = 'dyna
             hash={ text }
             as={ asProp }
             type="long"
+            isTooltipDisabled={ isTooltipDisabled }
           />
         );
       case 'constant':
@@ -130,6 +134,7 @@ const Content = chakra(({ className, isLoading, asProp, text, truncation = 'dyna
           <HashStringShorten
             hash={ text }
             as={ asProp }
+            isTooltipDisabled={ isTooltipDisabled }
           />
         );
       case 'dynamic':
@@ -138,8 +143,10 @@ const Content = chakra(({ className, isLoading, asProp, text, truncation = 'dyna
             hash={ text }
             as={ asProp }
             tailLength={ tailLength }
+            isTooltipDisabled={ isTooltipDisabled }
           />
         );
+      case 'tail':
       case 'none':
         return <chakra.span as={ asProp }>{ text }</chakra.span>;
     }
@@ -151,6 +158,7 @@ const Content = chakra(({ className, isLoading, asProp, text, truncation = 'dyna
       isLoaded={ !isLoading }
       overflow="hidden"
       whiteSpace="nowrap"
+      textOverflow={ truncation === 'tail' ? 'ellipsis' : undefined }
     >
       { children }
     </Skeleton>

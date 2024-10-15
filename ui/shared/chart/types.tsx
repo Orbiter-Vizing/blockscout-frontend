@@ -1,7 +1,14 @@
+export interface TimeChartItemRaw {
+  date: Date;
+  dateLabel?: string;
+  value: number | string | null;
+}
+
 export interface TimeChartItem {
   date: Date;
   dateLabel?: string;
   value: number;
+  isApproximate?: boolean;
 }
 
 export interface ChartMargin {

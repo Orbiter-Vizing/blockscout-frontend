@@ -1,4 +1,4 @@
-import { inRange } from 'lodash';
+import _inRange from 'lodash/inRange';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -13,7 +13,6 @@ import throwOnResourceLoadError from 'lib/errors/throwOnResourceLoadError';
 import getQueryParamString from 'lib/router/getQueryParamString';
 import { USER_OP } from 'stubs/userOps';
 import TextAd from 'ui/shared/ad/TextAd';
-import UserOpEntity from 'ui/shared/entities/userOp/UserOpEntity';
 import PageTitle from 'ui/shared/Page/PageTitle';
 import RoutedTabs from 'ui/shared/Tabs/RoutedTabs';
 import TabsSkeleton from 'ui/shared/Tabs/TabsSkeleton';
@@ -23,6 +22,7 @@ import TxTokenTransfer from 'ui/tx/TxTokenTransfer';
 import useTxQuery from 'ui/tx/useTxQuery';
 import UserOpDetails from 'ui/userOp/UserOpDetails';
 import UserOpRaw from 'ui/userOp/UserOpRaw';
+import UserOpSubHeading from 'ui/userOp/UserOpSubHeading';
 
 const UserOp = () => {
   const router = useRouter();
@@ -43,7 +43,11 @@ const UserOp = () => {
     if (!userOpQuery.data) {
       return true;
     } else {
-      if (inRange(Number(tt.log_index), userOpQuery.data?.user_logs_start_index, userOpQuery.data?.user_logs_start_index + userOpQuery.data?.user_logs_count)) {
+      if (_inRange(
+        Number(tt.log_index),
+        userOpQuery.data?.user_logs_start_index,
+        userOpQuery.data?.user_logs_start_index + userOpQuery.data?.user_logs_count,
+      )) {
         return true;
       }
       return false;
@@ -54,7 +58,7 @@ const UserOp = () => {
     if (!userOpQuery.data) {
       return true;
     } else {
-      if (inRange(log.index, userOpQuery.data?.user_logs_start_index, userOpQuery.data?.user_logs_start_index + userOpQuery.data?.user_logs_count)) {
+      if (_inRange(log.index, userOpQuery.data?.user_logs_start_index, userOpQuery.data?.user_logs_start_index + userOpQuery.data?.user_logs_count)) {
         return true;
       }
       return false;
@@ -90,7 +94,7 @@ const UserOp = () => {
   throwOnAbsentParamError(hash);
   throwOnResourceLoadError(userOpQuery);
 
-  const titleSecondRow = <UserOpEntity hash={ hash } noLink noCopy={ false } fontWeight={ 500 } fontFamily="heading"/>;
+  const titleSecondRow = <UserOpSubHeading hash={ hash }/>;
 
   return (
     <>

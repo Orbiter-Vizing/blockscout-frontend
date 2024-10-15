@@ -1,6 +1,6 @@
 import { useWeb3Modal, useWeb3ModalState } from '@web3modal/wagmi/react';
 import React from 'react';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useAccount, useDisconnect, useAccountEffect } from 'wagmi';
 
 import * as mixpanel from 'lib/mixpanel/index';
 
@@ -29,8 +29,12 @@ export default function useWallet({ source }: Params) {
   }, [ open, source ]);
 
   const handleAccountConnected = React.useCallback(({ isReconnected }: { isReconnected: boolean }) => {
-    !isReconnected && isConnectionStarted.current &&
+    if (!isReconnected && isConnectionStarted.current) {
       mixpanel.logEvent(mixpanel.EventTypes.WALLET_CONNECT, { Source: source, Status: 'Connected' });
+      mixpanel.userProfile.setOnce({
+        'With Connected Wallet': true,
+      });
+    }
     isConnectionStarted.current = false;
   }, [ source ]);
 
@@ -38,11 +42,14 @@ export default function useWallet({ source }: Params) {
     disconnect();
   }, [ disconnect ]);
 
-  const { address, isDisconnected } = useAccount({ onConnect: handleAccountConnected });
+  useAccountEffect({ onConnect: handleAccountConnected });
+
+  const { address, isDisconnected } = useAccount();
 
   const isWalletConnected = isClientLoaded && !isDisconnected && address !== undefined;
 
   return {
+    openModal: open,
     isWalletConnected,
     address: address || '',
     connect: handleConnect,
