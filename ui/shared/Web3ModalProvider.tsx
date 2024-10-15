@@ -1,5 +1,5 @@
 import { useColorMode } from '@chakra-ui/react';
-import { createWeb3Modal, defaultWagmiConfig, useWeb3ModalTheme } from '@web3modal/wagmi/react';
+import { createWeb3Modal, useWeb3ModalTheme } from '@web3modal/wagmi/react';
 import React from 'react';
 import { WagmiProvider } from 'wagmi';
 
@@ -30,7 +30,8 @@ const init = () => {
         '38f5d18bd8522c244bdd70cb4a68e0e718865155811c043f052fb9f1c51de662',
         'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96',
       ],
-      allowUnsupportedChain: true,
+      allowUnsupportedChain: false,
+      allWallets: 'HIDE',
     });
   } catch (error) {}
 };
